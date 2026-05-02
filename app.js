@@ -5,69 +5,73 @@
 
 // ---------- DATA ----------------------------------------------------
 
+// Coordinates verified May 2026 against IPMA, OSM, Wikipedia, sea-seek, Michelin.
 const PLACES = {
-  'aeroport':              { name: "Aéroport de Madère",          lat: 32.6979, lng: -16.7745, type: 'sight', desc: "Aéroport Cristiano Ronaldo. Vents traversiers fréquents — prévoir large pour les retours." },
-  'estreito':              { name: "Estreito da Calheta",         lat: 32.7286, lng: -17.1797, type: 'sight', desc: "Le village de la base. Côte sud-ouest, climat doux, accès marina." },
-  'praia-calheta':         { name: "Praia da Calheta",            lat: 32.7186, lng: -17.1739, type: 'sight', desc: "Plage de sable jaune importé. Pontons plats, eau calme, parfaite pour la première baignade." },
-  'cantinho-serra':        { name: "Cantinho da Serra",           lat: 32.7340, lng: -17.1820, type: 'meal',  desc: "Cuisine madérienne typique au feu de bois. Idéal pour une première espetada à l'arrivée." },
-  'mercado':               { name: "Mercado dos Lavradores",      lat: 32.6481, lng: -16.9056, type: 'sight', desc: "Marché central de Funchal. Halle Art déco, fruits exotiques (anonas, maracujás), poissons frais." },
-  'cathedrale':            { name: "Cathédrale Sé de Funchal",    lat: 32.6477, lng: -16.9088, type: 'sight', desc: "Cathédrale du XVe siècle. Plafond mudéjar en bois de cèdre." },
-  'zona-velha':            { name: "Zona Velha de Funchal",       lat: 32.6471, lng: -16.9035, type: 'sight', desc: "Vieille ville plate, ruelles pavées, portes peintes. Restaurants en terrasse." },
-  'telepherique':          { name: "Téléphérique Funchal-Monte",  lat: 32.6485, lng: -16.9035, type: 'sight', desc: "Station basse, à côté de la Zona Velha. 15 minutes de cabine au-dessus de la baie." },
-  'monte-palace':          { name: "Monte Palace Tropical Garden", lat: 32.6717, lng: -16.9020, type: 'sight', desc: "Jardin tropical au sommet de Monte. Mosaïques portugaises, étangs à carpes koï." },
-  'blandys':               { name: "Blandy's Wine Lodge",         lat: 32.6470, lng: -16.9082, type: 'sight', desc: "Cave historique du vin de Madère. Visite guidée + dégustation, parfaitement accessible." },
-  'marina-calheta':        { name: "Marina da Calheta",           lat: 32.7188, lng: -17.1734, type: 'sight', desc: "Port de plaisance. À 5 min de l'hôtel — embarquement Lobosonda pour les dauphins." },
-  'vila-peixe':            { name: "Vila do Peixe",               lat: 32.6452, lng: -16.9755, type: 'meal',  desc: "Poisson frais grillé au gros sel face au port de Câmara de Lobos." },
-  'cascata-anjos':         { name: "Cascata dos Anjos",           lat: 32.7505, lng: -17.2230, type: 'sight', desc: "Cascade qui tombe sur la chaussée. On passe sous les embruns en voiture." },
-  'seixal':                { name: "Praia do Seixal",             lat: 32.8231, lng: -17.0999, type: 'sight', desc: "Plage de sable noir volcanique sur la côte nord." },
-  'fanal':                 { name: "Forêt de Fanal",              lat: 32.8155, lng: -17.1604, type: 'sight', desc: "Forêt de lauriers brumeuse, irréelle quand la brume descend. Patrimoine Unesco." },
-  'porto-moniz':           { name: "Piscines de Porto Moniz",     lat: 32.8682, lng: -17.1727, type: 'sight', desc: "Piscines naturelles aménagées dans la lave. Vestiaires, douches, accès facile." },
-  'cachalote':             { name: "Restaurante Cachalote",       lat: 32.8688, lng: -17.1727, type: 'meal',  desc: "Poisson grillé en terrasse face aux piscines de lave." },
-  'cabo-girao':            { name: "Cabo Girão Skywalk",          lat: 32.6552, lng: -17.0048, type: 'sight', desc: "Plateforme de verre suspendue à 580 m, l'une des plus hautes falaises maritimes d'Europe." },
-  'pico-areeiro':          { name: "Pico do Areeiro",             lat: 32.7349, lng: -16.9277, type: 'sight', desc: "3e sommet de l'île (1818 m), accessible en voiture. Vue à 360° sur le centre montagneux." },
-  'pico-areeiro-parking':  { name: "Parking Pico do Areeiro",     lat: 32.7349, lng: -16.9277, type: 'sight', desc: "Parking du sommet (payant). Point de départ du sentier PR1 vers le Stairway to Heaven." },
-  'ribeiro-frio':          { name: "Ribeiro Frio",                lat: 32.7361, lng: -16.8855, type: 'meal',  desc: "Truites élevées sur place, cuisine simple en pleine forêt de lauriers." },
-  'santana':               { name: "Santana",                     lat: 32.8014, lng: -16.8800, type: 'sight', desc: "Maisons triangulaires colorées au toit de chaume, emblèmes du nord de l'île." },
-  'sao-lourenco':          { name: "Ponta de São Lourenço",       lat: 32.7434, lng: -16.7037, type: 'sight', desc: "Pointe est de l'île, panorama lunaire de roches rouges et noires." },
-  'rabacal':               { name: "Parking Rabaçal",             lat: 32.7570, lng: -17.1359, type: 'sight', desc: "Point de départ des Levadas das 25 Fontes et do Risco. Sentiers plats le long des canaux." },
-  'ponta-sol':             { name: "Ponta do Sol",                lat: 32.6781, lng: -17.1006, type: 'meal',  desc: "Village dans le creux d'une falaise, le plus ensoleillé de l'île." },
-  'vila-carne':            { name: "Vila da Carne",               lat: 32.6451, lng: -16.9758, type: 'meal',  desc: "L'espetada de référence à Câmara de Lobos, vue sur le port." },
-  'camara-lobos':          { name: "Câmara de Lobos",             lat: 32.6453, lng: -16.9762, type: 'sight', desc: "Port de pêche peint par Churchill. Un dernier expresso face aux barques colorées." }
+  'aeroport':              { name: "Aéroport de Madère",          lat: 32.69780, lng: -16.77460, type: 'sight', desc: "Aéroport Cristiano Ronaldo (FNC). Vents traversiers fréquents — prévoir large pour les retours." },
+  'estreito':              { name: "Estreito da Calheta",         lat: 32.73798, lng: -17.18095, type: 'sight', desc: "Le village de la base. Côte sud-ouest, climat doux, à 5 min de la marina." },
+  'praia-calheta':         { name: "Praia da Calheta",            lat: 32.72035, lng: -17.17831, type: 'sight', desc: "Plage de sable jaune importé du Maroc. Pontons plats, eau calme, parfaite pour une première baignade." },
+  'marina-calheta':        { name: "Marina da Calheta",           lat: 32.71781, lng: -17.17211, type: 'sight', desc: "Port de plaisance. Point d'embarquement pour les sorties en mer (Lobosonda, On Tales, H2O Madeira)." },
+  'mercado':               { name: "Mercado dos Lavradores",      lat: 32.64865, lng: -16.90377, type: 'sight', desc: "Marché central de Funchal. Halle Art déco, fruits exotiques (anonas, maracujás), poissons frais. Attention aux prix gonflés des fruits — négocier ou observer avant." },
+  'cathedrale':            { name: "Cathédrale Sé de Funchal",    lat: 32.64233, lng: -16.90500, type: 'sight', desc: "Cathédrale du XVe siècle. Plafond mudéjar en bois de cèdre. Largo da Sé." },
+  'zona-velha':            { name: "Zona Velha de Funchal",       lat: 32.64770, lng: -16.90670, type: 'sight', desc: "Vieille ville plate, ruelles pavées, portes peintes (Projecto ARTeria). Restaurants en terrasse rua de Santa Maria." },
+  'telepherique':          { name: "Téléphérique Funchal-Monte",  lat: 32.64780, lng: -16.90670, type: 'sight', desc: "Station basse au parc Almirante Reis (à côté de la Zona Velha). 15 min de cabine au-dessus de la baie." },
+  'monte-palace':          { name: "Monte Palace Tropical Garden", lat: 32.67404, lng: -16.90200, type: 'sight', desc: "Jardin tropical au sommet de Monte. Mosaïques portugaises (azulejos), étangs à carpes koï, jardins japonais." },
+  'blandys':               { name: "Blandy's Wine Lodge",         lat: 32.64700, lng: -16.91170, type: 'sight', desc: "Cave historique du vin de Madère, Av. Arriaga 28. Visite guidée + dégustation, parfaitement accessible." },
+  'vila-peixe':            { name: "Vila do Peixe",               lat: 32.65043, lng: -16.97718, type: 'meal',  desc: "Poisson frais grillé au gros sel face au port de Câmara de Lobos. Référence Michelin Guide. Rua Dr João Abel de Freitas 30A." },
+  'vila-carne':            { name: "Vila da Carne",               lat: 32.65043, lng: -16.97718, type: 'meal',  desc: "Sœur jumelle de Vila do Peixe, juste à côté. Espetada de référence à Câmara de Lobos." },
+  'cascata-anjos':         { name: "Cascata dos Anjos",           lat: 32.68764, lng: -17.11557, type: 'sight', desc: "Cascade qui tombe sur la chaussée (ancienne ER101). On passe sous les embruns en voiture, fenêtres fermées." },
+  'seixal':                { name: "Praia do Seixal",             lat: 32.82400, lng: -17.10932, type: 'sight', desc: "Plage de sable noir volcanique sur la côte nord. Cadre spectaculaire entre falaises." },
+  'fanal':                 { name: "Forêt de Fanal",              lat: 32.80951, lng: -17.14098, type: 'sight', desc: "Posto Florestal do Fanal. Forêt de lauriers (Laurissilva) brumeuse, irréelle quand la brume descend. Patrimoine Unesco." },
+  'porto-moniz':           { name: "Piscines de Porto Moniz",     lat: 32.86804, lng: -17.16635, type: 'sight', desc: "Piscines naturelles aménagées dans la lave. Vestiaires, douches, accès facile." },
+  'cachalote':             { name: "Restaurante Cachalote",       lat: 32.86804, lng: -17.16635, type: 'meal',  desc: "Poisson grillé en terrasse, posé sur la roche volcanique face aux piscines. Maison de 1969. Forte de São João Batista." },
+  'cabo-girao':            { name: "Cabo Girão Skywalk",          lat: 32.65652, lng: -17.00444, type: 'sight', desc: "Plateforme de verre suspendue à 580 m, l'une des plus hautes falaises maritimes d'Europe." },
+  'pico-areeiro':          { name: "Pico do Areeiro",             lat: 32.73477, lng: -16.92871, type: 'sight', desc: "3e sommet de l'île (1818 m), accessible en voiture. Vue à 360° sur le centre montagneux." },
+  'pico-areeiro-parking':  { name: "Parking Pico do Areeiro",     lat: 32.73477, lng: -16.92871, type: 'sight', desc: "Parking du sommet (payant). Point de départ du sentier PR1 vers Pico Ruivo / Stairway to Heaven." },
+  'ribeiro-frio':          { name: "Ribeiro Frio",                lat: 32.82046, lng: -16.86745, type: 'meal',  desc: "Posto Aquícola : truites élevées sur place, cuisine simple en pleine forêt de lauriers. Sur la route ER103, côte nord." },
+  'santana':               { name: "Casas de Santana",            lat: 32.80526, lng: -16.88241, type: 'sight', desc: "Maisons triangulaires colorées au toit de chaume, emblèmes du nord de l'île. Trois sont conservées au Parque Temático." },
+  'cantinho-serra':        { name: "Cantinho da Serra (Santana)", lat: 32.80526, lng: -16.88241, type: 'meal',  desc: "Cuisine madérienne au feu de bois, Estrada do Pico das Pedras, Santana — à combiner avec la visite des Casas. ⚠️ N'EST PAS à Calheta." },
+  'sao-lourenco':          { name: "Ponta de São Lourenço",       lat: 32.74322, lng: -16.70094, type: 'sight', desc: "Pointe est de l'île. Parking PR8, panorama lunaire de roches rouges et noires." },
+  'rabacal':               { name: "Parking Rabaçal",             lat: 32.75472, lng: -17.13375, type: 'sight', desc: "Altitude 1291 m. Point de départ des Levadas das 25 Fontes (PR6) et do Risco. Sentiers plats le long des canaux." },
+  'ponta-sol':             { name: "Ponta do Sol",                lat: 32.66670, lng: -17.10000, type: 'sight', desc: "Village dans le creux d'une falaise, le plus ensoleillé de l'île." },
+  'camara-lobos':          { name: "Câmara de Lobos",             lat: 32.65043, lng: -16.97718, type: 'sight', desc: "Port de pêche peint par Churchill. Un dernier expresso face aux barques colorées." }
 };
 
 const DAYS = [
   {
-    id: 1, dow: 'Dim', emoji: '✈️', featured: false,
-    title: "Atterrissage en douceur",
-    subtitle: "Funchal Airport → Estreito da Calheta",
+    id: 1, dow: 'Dim', emoji: '✈️', featured: true,
+    title: "Atterrissage & Festa da Flor",
+    subtitle: "Funchal Airport → cortège fleuri → Calheta",
     items: [
-      { time: "14:00", title: "Récupération de la voiture", body: "Cap à l'ouest par la VR1 puis VE3 — 50 min de routes côtières.", places: ['aeroport', 'estreito'] },
-      { time: "16:00", title: "Check-in & piscine", body: "Les jambes posées, le voyage commence vraiment.", places: [] },
-      { time: "18:00", title: "Praia da Calheta", body: "Sable jaune importé, pontons plats, eau calme — parfait pour une première baignade.", places: ['praia-calheta'] },
-      { time: "20:00", title: "Dîner — Cantinho da Serra", body: "Cuisine madérienne au feu de bois.", places: ['cantinho-serra'] }
+      { time: "14:00", title: "Récupération de la voiture", body: "Sortie aéroport, choix : direct Calheta (50 min) — OU détour Funchal pour le cortège (voir Bonus).", places: ['aeroport'] },
+      { time: "16:30", title: "★ Cortejo Alegórico (Festa da Flor)", body: "Le grand cortège fleuri, Avenida do Mar à Funchal. Coup de chance : il tombe le jour de l'arrivée. ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. Si fatigue : zapper et filer à Calheta.", places: [] },
+      { time: "18:30", title: "Cap à l'ouest", body: "VR1 puis VE3 — 50 min de routes côtières jusqu'à Estreito da Calheta.", places: ['estreito'] },
+      { time: "19:30", title: "Check-in & piscine", body: "Les jambes posées, le voyage commence vraiment.", places: [] },
+      { time: "21:00", title: "Dîner libre à Calheta", body: "Selon l'heure d'arrivée et la fatigue : restaurant de l'hôtel, ou village. Réservation en direct conseillée pour 5 personnes.", places: [] }
     ]
   },
   {
     id: 2, dow: 'Lun', emoji: '⛪', featured: false,
-    title: "Funchal, capitale en pente",
-    subtitle: "Marché, téléphérique, jardin de Monte",
+    title: "Funchal en pleine Festa da Flor",
+    subtitle: "Marché, fleurs, téléphérique, Monte",
     items: [
-      { time: "10:00", title: "Mercado dos Lavradores", body: "Anonas, maracujás, fruta deliciosa — on goûte tout, on n'achète presque rien.", places: ['mercado'] },
-      { time: "12:00", title: "Centre historique", body: "Cathédrale Sé, ruelles plates de la Zona Velha — adapté pour tout le monde.", places: ['cathedrale', 'zona-velha'] },
-      { time: "15:00", title: "Téléphérique de Monte", body: "15 minutes de cabine au-dessus de la baie. Au sommet : Jardin Tropical de Monte Palace.", places: ['telepherique', 'monte-palace'] },
+      { time: "10:00", title: "Mercado dos Lavradores", body: "Anonas, maracujás, fruta deliciosa — goûter avant d'acheter, les prix au stand sont gonflés pour les touristes.", places: ['mercado'] },
+      { time: "11:00", title: "Mercado da Flor & tapis floraux", body: "Pendant la Festa da Flor : marché aux fleurs sur l'Avenida Arriaga, et 18 tapis floraux entre la Loja do Cidadão et le Largo do Corpo Santo.", places: [] },
+      { time: "12:30", title: "Centre historique", body: "Cathédrale Sé, ruelles plates de la Zona Velha (rues peintes du projet ARTeria).", places: ['cathedrale', 'zona-velha'] },
+      { time: "14:30", title: "Exposição da Flor", body: "Pavilhão da Flor, Largo da Restauração — 71e exposition florale annuelle, ouverte tous les jours du voyage. Courte (~30 min).", places: [] },
+      { time: "15:30", title: "Téléphérique de Monte", body: "15 minutes de cabine au-dessus de la baie. Au sommet : Jardin Tropical de Monte Palace.", places: ['telepherique', 'monte-palace'] },
       { time: "17:00", title: "Carros de cesto", body: "Descente en panier d'osier pour les plus jeunes ; les parents redescendent en téléphérique.", places: [] },
-      { time: "Soir", title: "Dégustation Blandy's", body: "Cave historique du vin de Madère.", places: ['blandys'] }
+      { time: "Soir", title: "Dégustation Blandy's", body: "Cave historique du vin de Madère, Av. Arriaga 28. Réserver sur blandyswinelodge.com.", places: ['blandys'] }
     ]
   },
   {
     id: 3, dow: 'Mar', emoji: '🐬', featured: true,
     title: "Au large, les dauphins",
-    subtitle: "Catamaran depuis la marina de Calheta",
+    subtitle: "Sortie en mer depuis la marina de Calheta",
     items: [
-      { time: "09:30", title: "Embarquement marina de Calheta", body: "Lobosonda, catamaran stable, sièges, toilettes, ombre — pensé pour tous les âges.", places: ['marina-calheta'] },
+      { time: "09:30", title: "Embarquement marina de Calheta", body: "⚠️ Pas de catamaran à Calheta — uniquement bateaux moyens. Lobosonda : bateau bois traditionnel Ribeira Brava (16 places, plus stable, à demander) ou semi-rigide Stenella (rapide, secoué). Alternatives : On Tales (yacht voilier) ou H2O Madeira.", places: ['marina-calheta'] },
       { time: "10–13h", title: "3 heures au large", body: "Dauphins communs, baleines pilotes, parfois tortues caouannes. Les guides sont biologistes marins.", places: [] },
       { time: "14:00", title: "Repos hôtel", body: "Le sel, la peau qui tire, la sieste qui s'impose.", places: [] },
-      { time: "19:30", title: "Dîner — Vila do Peixe", body: "Poisson frais grillé au gros sel face au port de Câmara de Lobos.", places: ['vila-peixe'] }
+      { time: "19:30", title: "Dîner — Vila do Peixe", body: "Poisson frais grillé au gros sel face au port de Câmara de Lobos. Référence Michelin Guide.", places: ['vila-peixe'] }
     ]
   },
   {
@@ -77,7 +81,7 @@ const DAYS = [
     items: [
       { time: "10:00", title: "Route panoramique", body: "Cascata dos Anjos qui tombe sur la chaussée, Seixal et son sable noir, forêt de Fanal si la brume joue le jeu.", places: ['cascata-anjos', 'seixal', 'fanal'] },
       { time: "12:30", title: "Porto Moniz", body: "Piscines naturelles de lave — eau de mer dans la roche noire. La carte postale de Madère.", places: ['porto-moniz'] },
-      { time: "14:00", title: "Déjeuner — Cachalote", body: "Poisson grillé en terrasse face aux piscines de lave.", places: ['cachalote'] }
+      { time: "14:00", title: "Déjeuner — Cachalote", body: "Poisson grillé en terrasse posée sur la roche, face aux piscines. Maison de 1969.", places: ['cachalote'] }
     ]
   },
   {
@@ -87,9 +91,9 @@ const DAYS = [
     items: [
       { time: "09:00", title: "Cabo Girão", body: "Skywalk vitré à 580 m au-dessus de l'océan — accès direct depuis le parking.", places: ['cabo-girao'] },
       { time: "11:00", title: "Pico do Areeiro · 1818 m", body: "On monte en voiture jusqu'au sommet. Vue à 360° sur le centre montagneux.", places: ['pico-areeiro'] },
-      { time: "13:00", title: "Déjeuner — Ribeiro Frio", body: "Truites élevées sur place, cuisine simple en pleine forêt de lauriers.", places: ['ribeiro-frio'] },
-      { time: "15:00", title: "Santana & Ponta de São Lourenço", body: "Maisons triangulaires colorées, puis panorama depuis le belvédère de la pointe est.", places: ['santana', 'sao-lourenco'] },
-      { time: "19:00", title: "Retour Calheta", body: "1 h de route par la côte sud.", places: [] }
+      { time: "13:00", title: "Déjeuner — au choix", body: "Truites de Ribeiro Frio en pleine forêt de lauriers, OU Cantinho da Serra (Estrada do Pico das Pedras, Santana) — cuisine au feu de bois, idéal pour enchaîner avec la visite des Casas Típicas.", places: ['ribeiro-frio', 'cantinho-serra'] },
+      { time: "15:00", title: "Casas de Santana & São Lourenço", body: "Maisons triangulaires colorées (Parque Temático), puis cap à l'est pour le panorama lunaire de la Ponta de São Lourenço.", places: ['santana', 'sao-lourenco'] },
+      { time: "19:00", title: "Retour Calheta", body: "1h15 de route par la VR1 (côte sud).", places: [] }
     ]
   },
   {
@@ -97,10 +101,10 @@ const DAYS = [
     title: "Levada & dîner d'adieu",
     subtitle: "Levada douce, parents au repos le matin",
     items: [
-      { time: "Matin", title: "Levada das 25 Fontes ou do Risco", body: "Sentiers plats le long des canaux d'irrigation. La Madère secrète — mousse et eau claire.", places: ['rabacal'] },
+      { time: "Matin", title: "Levada das 25 Fontes ou do Risco", body: "Sentiers PR6 plats (alt. 1291 m au départ) le long des canaux d'irrigation. La Madère secrète — mousse et eau claire.", places: ['rabacal'] },
       { time: "13:00", title: "Déjeuner — Ponta do Sol", body: "Village dans le creux d'une falaise, le plus ensoleillé de l'île.", places: ['ponta-sol'] },
       { time: "18:30", title: "Coucher de soleil au Cabo Girão", body: "Ou depuis la piscine, selon les forces.", places: ['cabo-girao'] },
-      { time: "20:30", title: "Dîner d'adieu — Vila da Carne", body: "L'espetada de référence à Câmara de Lobos.", places: ['vila-carne'] }
+      { time: "20:30", title: "Dîner d'adieu — Vila da Carne", body: "L'espetada de référence à Câmara de Lobos. Sœur jumelle de Vila do Peixe (juste à côté).", places: ['vila-carne'] }
     ]
   },
   {
@@ -349,6 +353,13 @@ function setupTabs() {
 function openPlaceModal(placeId) {
   const p = PLACES[placeId];
   if (!p) return;
+  // Reset modal in case it was previously used by openWeatherChooser
+  $('#btnWaze').style.display = 'flex';
+  $('#btnApple').style.display = 'flex';
+  $('#btnShare').style.display = 'flex';
+  $('#btnGmaps').style.display = 'flex';
+  $('#btnGmaps').innerHTML = '<span class="btn-icon">🗺️</span><span>Ouvrir dans Google Maps</span>';
+  const ipmaBtn = $('#btnIpma'); if (ipmaBtn) ipmaBtn.remove();
   $('#modalKicker').textContent = p.type === 'meal' ? 'Restaurant' : 'Destination';
   $('#modalTitle').textContent = p.name;
   $('#modalDesc').textContent = p.desc || '';
@@ -621,6 +632,10 @@ async function fetchWeather() {
   });
 }
 
+// External weather page targets
+const METEOBLUE_URL = 'https://www.meteoblue.com/en/weather/14-days/estreito-da-calheta_portugal_2268419';
+const IPMA_URL      = 'https://www.ipma.pt/en/otempo/prev.localidade.hora/index.jsp?idDistrito=31&idConcelho=502&idLocal=2310303';
+
 function paintWeather(dayId, w) {
   const el = document.querySelector(`[data-weather-day="${dayId}"]`);
   if (!el) return;
@@ -628,13 +643,44 @@ function paintWeather(dayId, w) {
   if (!w) {
     el.querySelector('.weather-icon').textContent = '🌤️';
     el.querySelector('.weather-temps').textContent = '— °';
-    el.querySelector('.weather-desc').textContent = 'Prévisions hors fenêtre';
-    return;
+    el.querySelector('.weather-desc').textContent = 'Tap pour les prévisions';
+  } else {
+    const [emoji, label] = WMO[w.code] || ['🌤️', 'Variable'];
+    el.querySelector('.weather-icon').textContent = emoji;
+    el.querySelector('.weather-temps').innerHTML = `${w.hi}°<span class="lo">/ ${w.lo}°</span>`;
+    el.querySelector('.weather-desc').textContent = `${label} · tap pour détails`;
   }
-  const [emoji, label] = WMO[w.code] || ['🌤️', 'Variable'];
-  el.querySelector('.weather-icon').textContent = emoji;
-  el.querySelector('.weather-temps').innerHTML = `${w.hi}°<span class="lo">/ ${w.lo}°</span>`;
-  el.querySelector('.weather-desc').textContent = label;
+  // Wire the click — opens reputable weather site for Madeira
+  el.onclick = () => openWeatherChooser(dayId);
+}
+
+function openWeatherChooser(dayId) {
+  // Two reputable sources: meteoblue (deep-link to Estreito da Calheta, 14-day)
+  // and IPMA (Portuguese national weather service, official).
+  const day = DAYS.find(d => d.id === dayId);
+  const dateLabel = day ? fmtDateShort(dateForDay(day.id - 1)) : '';
+  $('#modalKicker').textContent = 'Météo · sources de référence';
+  $('#modalTitle').textContent = `Prévisions Madère — ${dateLabel}`;
+  $('#modalDesc').textContent = "Deux sources réputées : meteoblue (prévisions 14 jours, lien direct sur Estreito da Calheta) et IPMA, le service météorologique officiel portugais.";
+  $('#modalCoords').textContent = '';
+  $('#btnWaze').style.display = 'none';
+  $('#btnApple').style.display = 'none';
+  $('#btnShare').style.display = 'none';
+  $('#btnGmaps').style.display = 'flex';
+  $('#btnGmaps').href = METEOBLUE_URL;
+  $('#btnGmaps').innerHTML = '<span class="btn-icon">⛅</span><span>Meteoblue · 14 jours</span>';
+  // Re-purpose share button as IPMA link
+  const ipmaBtn = document.createElement('a');
+  ipmaBtn.className = 'btn btn-secondary';
+  ipmaBtn.id = 'btnIpma';
+  ipmaBtn.href = IPMA_URL;
+  ipmaBtn.target = '_blank';
+  ipmaBtn.rel = 'noopener';
+  ipmaBtn.innerHTML = '<span class="btn-icon">🇵🇹</span><span>IPMA · officiel Portugal</span>';
+  const existing = $('#btnIpma');
+  if (existing) existing.remove();
+  $('#btnShare').parentNode.appendChild(ipmaBtn);
+  openModal('#modal');
 }
 
 // ---------- INSTALL PROMPT (PWA) -----------------------------------
