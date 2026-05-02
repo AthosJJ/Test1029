@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+<meta name="theme-color" content="#0d2e38">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Madère 2026">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Carnet de voyage à Madère — 7 jours, hors-ligne, avec carte et météo.">
+<title>Madère · Carnet de voyage</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,600&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  :root {
+    --ocean: #1a4d5c;
+    --ocean-deep: #0d2e38;
+    --sand: #f4ead5;
+    --paper: #faf6ec;
+    --terracotta: #c8553d;
+    --gold: #d4a574;
+    --moss: #5a6f4a;
+    --ink: #1a1a1a;
+    --whisper: #8a8580;
+    --shadow: 0 4px 24px rgba(13,46,56,0.08);
+    --shadow-lg: 0 12px 48px rgba(13,46,56,0.18);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    overscroll-behavior: none;
+  }
+
+  /* === APP SHELL === */
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    position: relative;
+  }
+
+  .app-bar {
+    flex-shrink: 0;
+    padding: calc(var(--safe-top) + 10px) 18px 10px;
+    background: rgba(250,246,236,0.92);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    z-index: 50;
+  }
+  .app-bar .brand {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--ocean-deep);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .app-bar .brand em { color: var(--terracotta); font-style: normal; }
+  .app-bar .brand-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: var(--whisper);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .app-bar .icon-btn {
+    background: rgba(0,0,0,0.05);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ocean-deep);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .app-bar .icon-btn:active { background: rgba(0,0,0,0.12); }
+
+  /* === MAIN CONTENT === */
+  .main {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .pane {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .pane.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  #pane-days { overflow-y: hidden; }
+
+  /* === DAYS PANE === */
+  .days-meta {
+    flex-shrink: 0;
+    padding: 10px 18px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .days-meta .day-counter {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ocean-deep);
+  }
+  .days-meta .day-counter strong {
+    font-family: 'DM Mono', monospace;
+    font-style: normal;
+    font-size: 12px;
+    background: var(--ocean-deep);
+    color: var(--sand);
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin-right: 4px;
+  }
+  .days-meta .day-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--whisper);
+  }
+  .progress-track {
+    flex-shrink: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.06);
+    margin: 0 18px 8px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--terracotta), var(--gold));
+    width: 12.5%;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
+  }
+
+  .days-pager {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+    min-height: 0;
+  }
+  .days-pager::-webkit-scrollbar { display: none; }
+  .day-page {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 18px 100px;
+    overscroll-behavior: contain;
+  }
+  .day-page::-webkit-scrollbar { width: 0; }
+
+  /* === DAY HERO === */
+  .day-hero {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    margin-top: 8px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .day-hero.featured {
+    background: linear-gradient(135deg, var(--ocean-deep) 0%, #163e4a 100%);
+    color: var(--sand);
+    border-color: var(--ocean-deep);
+  }
+  .day-hero.featured .day-tag { color: var(--gold); }
+  .day-hero.featured h2 { color: white; }
+  .day-hero.featured .subtitle { color: rgba(244,234,213,0.75); }
+
+  .day-hero .day-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .day-hero h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.05;
+    color: var(--ocean-deep);
+    letter-spacing: -0.5px;
+  }
+  .day-hero .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--whisper);
+    margin-top: 6px;
+  }
+  .day-emoji {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-size: 38px;
+    opacity: 0.9;
+  }
+  .day-rest-flag {
+    display: inline-block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 11px;
+    background: var(--sand);
+    color: var(--terracotta);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-top: 10px;
+    border: 1px solid rgba(200,85,61,0.2);
+  }
+  .day-hero.featured .day-rest-flag {
+    background: rgba(255,255,255,0.12);
+    color: var(--gold);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  /* === WEATHER WIDGET === */
+  .weather {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(0,0,0,0.12);
+    min-height: 48px;
+  }
+  .day-hero.featured .weather { border-top-color: rgba(255,255,255,0.18); }
+  .weather-icon {
+    font-size: 32px;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 44px;
+    text-align: center;
+  }
+  .weather-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .weather-temps {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ocean-deep);
+    line-height: 1.2;
+  }
+  .day-hero.featured .weather-temps { color: white; }
+  .weather-temps .lo {
+    color: var(--whisper);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .day-hero.featured .weather-temps .lo { color: rgba(244,234,213,0.65); }
+  .weather-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--whisper);
+    margin-top: 2px;
+  }
+  .day-hero.featured .weather-desc { color: var(--gold); }
+  .weather.skeleton .weather-icon { opacity: 0.3; }
+  .weather.skeleton .weather-temps,
+  .weather.skeleton .weather-desc {
+    background: rgba(0,0,0,0.05);
+    color: transparent;
+    border-radius: 4px;
+    width: 60%;
+  }
+
+  /* === TIMELINE === */
+  .timeline {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 22px;
+    padding: 8px 22px 14px;
+    box-shadow: var(--shadow);
+  }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    padding: 12px 0;
+    align-items: start;
+    border-bottom: 1px dashed rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-when {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    padding-top: 14px;
+    font-weight: 500;
+  }
+  .tl-what {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+    padding-top: 4px;
+  }
+  .tl-what strong {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ocean-deep);
+    display: block;
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tl-check {
+    position: absolute;
+    top: 14px;
+    right: -4px;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid rgba(0,0,0,0.18);
+    border-radius: 50%;
+    cursor: pointer;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .tl-check::after {
+    content: "";
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    transform: rotate(-45deg) translate(1px, -1px);
+    transition: border-color 0.2s ease;
+  }
+  .tl-item.done .tl-check {
+    background: var(--moss);
+    border-color: var(--moss);
+  }
+  .tl-item.done .tl-check::after {
+    border-left-color: white;
+    border-bottom-color: white;
+  }
+  .tl-item.done .tl-what strong {
+    text-decoration: line-through;
+    text-decoration-color: rgba(0,0,0,0.3);
+    color: var(--whisper);
+  }
+
+  /* === LOCATION CHIP === */
+  .chips { margin-top: 6px; }
+  .loc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--sand);
+    border: 1px solid rgba(200,85,61,0.25);
+    color: var(--ocean-deep);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    margin: 4px 4px 4px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .loc-chip:active { transform: scale(0.96); }
+  .loc-chip::before {
+    content: "📍";
+    font-size: 12px;
+    font-style: normal;
+  }
+  .loc-chip.meal { background: #fff3e6; border-color: rgba(212,165,116,0.4); }
+  .loc-chip.meal::before { content: "🍽️"; }
+
+  /* === SWIPE NAV BUTTONS === */
+  .swipe-nav {
+    position: absolute;
+    bottom: 88px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .swipe-btn {
+    pointer-events: auto;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    color: var(--ocean-deep);
+    transition: transform 0.15s ease, opacity 0.2s ease;
+  }
+  .swipe-btn:active { transform: scale(0.92); }
+  .swipe-btn:disabled { opacity: 0.3; pointer-events: none; }
+  .swipe-btn svg { width: 20px; height: 20px; }
+
+  /* === MAP PANE === */
+  .pane-map { display: flex; flex-direction: column; }
+  #leaflet-map {
+    flex: 1;
+    width: 100%;
+    background: #e8e2d5;
+    min-height: 320px;
+  }
+  .map-list {
+    flex-shrink: 0;
+    max-height: 38%;
+    overflow-y: auto;
+    background: var(--paper);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 10px 0 calc(80px + var(--safe-bottom));
+  }
+  .map-filters {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .map-filters::-webkit-scrollbar { display: none; }
+  .filter-pill {
+    flex-shrink: 0;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ocean-deep);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .filter-pill.active {
+    background: var(--ocean-deep);
+    color: var(--sand);
+    border-color: var(--ocean-deep);
+  }
+  .map-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .map-row:active { background: rgba(0,0,0,0.04); }
+  .map-row .pin {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .map-row.meal .pin { background: var(--gold); }
+  .map-row .info { flex: 1; min-width: 0; }
+  .map-row .name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ocean-deep);
+    line-height: 1.2;
+  }
+  .map-row .day-ref {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--whisper);
+    margin-top: 2px;
+  }
+
+  /* Custom Leaflet pin */
+  .leaflet-pin {
+    background: var(--terracotta);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .leaflet-pin span {
+    transform: rotate(45deg);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .leaflet-pin.meal { background: var(--gold); }
+
+  /* === EATS PANE === */
+  .pane-eats { padding: 14px 18px calc(100px + var(--safe-bottom)); }
+
+  /* === TIPS PANE === */
+  .pane-tips { padding: 14px 18px calc(100px + var(--safe-bottom)); }
+
+  .section-head {
+    text-align: center;
+    margin: 18px 0 14px;
+  }
+  .section-head .num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 32px;
+    color: var(--terracotta);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .section-head h2 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ocean-deep);
+  }
+
+  .card-block {
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .card-block.dark {
+    background: var(--ocean-deep);
+    color: var(--sand);
+    border-color: var(--ocean-deep);
+  }
+  .card-block.warm {
+    background: var(--terracotta);
+    color: var(--paper);
+    border-color: var(--terracotta);
+  }
+  .card-block .card-num {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--gold);
+    opacity: 0.5;
+  }
+  .card-block.dark .card-num,
+  .card-block.warm .card-num { opacity: 0.85; }
+  .card-block .card-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 6px;
+  }
+  .card-block.dark .card-kicker { color: var(--gold); }
+  .card-block.warm .card-kicker { color: var(--paper); opacity: 0.85; }
+  .card-block h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  .food-row {
+    display: grid;
+    grid-template-columns: minmax(110px, 1fr) 2fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dotted rgba(255,255,255,0.2);
+  }
+  .card-block:not(.dark):not(.warm) .food-row {
+    border-bottom-color: rgba(0,0,0,0.1);
+  }
+  .food-row:last-child { border-bottom: none; }
+  .food-name {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .food-desc { font-size: 13px; line-height: 1.45; opacity: 0.92; }
+
+  .tip-list {
+    list-style: none;
+    counter-reset: tip;
+  }
+  .tip-list li {
+    counter-increment: tip;
+    padding: 12px 0 12px 32px;
+    border-bottom: 1px dotted rgba(255,255,255,0.2);
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .card-block:not(.dark):not(.warm) .tip-list li {
+    border-bottom-color: rgba(0,0,0,0.1);
+  }
+  .tip-list li:last-child { border-bottom: none; }
+  .tip-list li::before {
+    content: counter(tip, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .tip-list li strong {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .pico-block {
+    background: linear-gradient(135deg, #fff 0%, #fef8e8 100%);
+    border: 1px solid var(--gold);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .pico-block .card-kicker { color: var(--terracotta); }
+  .pico-block h3 { color: var(--ocean-deep); margin-bottom: 8px; }
+  .pico-block h3 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--terracotta);
+    font-size: 0.7em;
+    display: block;
+    margin-top: 4px;
+  }
+  .pico-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  @media (max-width: 480px) {
+    .pico-grid { grid-template-columns: 1fr; }
+  }
+  .pico-cell .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 4px;
+  }
+  .pico-cell p { font-size: 13px; line-height: 1.55; }
+  .pico-verdict {
+    background: var(--paper);
+    border-left: 3px solid var(--terracotta);
+    padding: 14px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.55;
+    border-radius: 0 10px 10px 0;
+  }
+
+  /* === BOTTOM TAB BAR === */
+  .tabbar {
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(250,246,236,0.96);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 6px 4px calc(6px + var(--safe-bottom));
+    z-index: 50;
+  }
+  .tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    padding: 8px 4px;
+    cursor: pointer;
+    color: var(--whisper);
+    transition: color 0.15s ease;
+    font-family: 'Inter', sans-serif;
+    border-radius: 12px;
+    position: relative;
+  }
+  .tab-btn svg { width: 22px; height: 22px; stroke-width: 1.6; }
+  .tab-btn .label {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  .tab-btn.active { color: var(--terracotta); }
+  .tab-btn.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: var(--terracotta);
+    border-radius: 0 0 3px 3px;
+  }
+
+  /* === MODAL === */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,46,56,0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+    animation: fadeIn 0.22s ease;
+  }
+  .modal-overlay.open { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(40px); } to { transform: translateY(0); } }
+  .modal {
+    background: var(--paper);
+    border-radius: 24px 24px 0 0;
+    padding: 22px 22px calc(28px + var(--safe-bottom));
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @media (min-width: 600px) {
+    .modal-overlay { align-items: center; padding: 20px; }
+    .modal { border-radius: 24px; }
+  }
+  .modal-handle {
+    width: 44px;
+    height: 4px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 2px;
+    margin: -8px auto 14px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0,0,0,0.06);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 6px;
+  }
+  .modal h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.1;
+    color: var(--ocean-deep);
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+    padding-right: 36px;
+  }
+  .modal .desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 12px 0 18px;
+  }
+  .modal-coords {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--whisper);
+    margin-bottom: 14px;
+    cursor: pointer;
+    user-select: all;
+  }
+  .modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--ocean-deep); color: var(--sand); }
+  .btn-secondary { background: white; color: var(--ocean-deep); border: 1px solid rgba(0,0,0,0.1); }
+  .btn-waze { background: #33ccff; color: white; }
+  .btn-icon { font-size: 18px; }
+
+  /* === SETTINGS MODAL === */
+  .settings-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .settings-row:last-of-type { border-bottom: none; }
+  .settings-row label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--whisper);
+  }
+  .settings-row input {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    padding: 10px 12px;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 10px;
+    background: white;
+    color: var(--ocean-deep);
+  }
+  .settings-row .help {
+    font-size: 12px;
+    color: var(--whisper);
+    line-height: 1.4;
+  }
+
+  /* === TOAST === */
+  .toast {
+    position: fixed;
+    bottom: calc(90px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--ocean-deep);
+    color: var(--sand);
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2000;
+    pointer-events: none;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* === INSTALL PROMPT === */
+  .install-prompt {
+    position: fixed;
+    bottom: calc(90px + var(--safe-bottom));
+    left: 16px;
+    right: 16px;
+    background: white;
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-lg);
+    display: none;
+    align-items: center;
+    gap: 12px;
+    z-index: 90;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .install-prompt.show { display: flex; }
+  .install-prompt .info { flex: 1; min-width: 0; }
+  .install-prompt .title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ocean-deep);
+  }
+  .install-prompt .sub {
+    font-size: 11px;
+    color: var(--whisper);
+    margin-top: 2px;
+  }
+  .install-prompt button {
+    flex-shrink: 0;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .install-prompt .dismiss {
+    background: none;
+    color: var(--whisper);
+    padding: 4px 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOP APP BAR -->
+  <header class="app-bar">
+    <div>
+      <div class="brand">Madeira <em>·</em> 2026</div>
+      <div class="brand-sub" id="brandSub">7 jours · 5 voyageurs</div>
+    </div>
+    <button class="icon-btn" id="settingsBtn" aria-label="Réglages">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DAYS PANE -->
+    <section class="pane active" id="pane-days">
+      <div class="days-meta">
+        <div class="day-counter"><strong id="dayCounter">1/7</strong><span id="dayCounterLabel">Jour 1 sur 7</span></div>
+        <div class="day-date" id="dayDate"></div>
+      </div>
+      <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="days-pager" id="daysPager"></div>
+      <div class="swipe-nav">
+        <button class="swipe-btn" id="prevDay" aria-label="Jour précédent" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="swipe-btn" id="nextDay" aria-label="Jour suivant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- MAP PANE -->
+    <section class="pane pane-map" id="pane-map">
+      <div class="map-filters" id="mapFilters">
+        <button class="filter-pill active" data-filter="all">Tous</button>
+        <button class="filter-pill" data-filter="sight">Sites</button>
+        <button class="filter-pill" data-filter="meal">Restaurants</button>
+        <button class="filter-pill" data-filter="d1">Dim</button>
+        <button class="filter-pill" data-filter="d2">Lun</button>
+        <button class="filter-pill" data-filter="d3">Mar</button>
+        <button class="filter-pill" data-filter="d4">Mer</button>
+        <button class="filter-pill" data-filter="d5">Jeu</button>
+        <button class="filter-pill" data-filter="d6">Ven</button>
+        <button class="filter-pill" data-filter="d7">Sam</button>
+      </div>
+      <div id="leaflet-map"></div>
+      <div class="map-list" id="mapList"></div>
+    </section>
+
+    <!-- EATS PANE -->
+    <section class="pane pane-eats" id="pane-eats">
+      <div class="section-head">
+        <span class="num">α</span>
+        <h2>Saveurs · à goûter</h2>
+      </div>
+      <div class="card-block warm">
+        <div class="card-num">α</div>
+        <div class="card-kicker">Le palais madérien</div>
+        <h3>À goûter sans faute</h3>
+        <div class="food-row"><div class="food-name">Espetada</div><div class="food-desc">Brochette de bœuf marinée à l'ail, embrochée sur un pic de laurier, suspendue verticalement.</div></div>
+        <div class="food-row"><div class="food-name">Bolo do caco</div><div class="food-desc">Pain plat à la patate douce, beurre d'ail tiède. Servi partout, à toute heure.</div></div>
+        <div class="food-row"><div class="food-name">Espada com banana</div><div class="food-desc">Sabre noir des abysses + banane frite. Improbable et excellent.</div></div>
+        <div class="food-row"><div class="food-name">Lapas grelhadas</div><div class="food-desc">Patelles grillées, citron, ail. À partager à l'apéritif.</div></div>
+        <div class="food-row"><div class="food-name">Bolo de mel</div><div class="food-desc">Gâteau de miel de canne, dense, épicé, qui se garde des semaines.</div></div>
+        <div class="food-row"><div class="food-name">Poncha</div><div class="food-desc">Aguardente, miel, citron. Le verre de bienvenue de l'île.</div></div>
+      </div>
+      <div class="section-head">
+        <span class="num">β</span>
+        <h2>Restaurants du carnet</h2>
+      </div>
+      <div id="restaurantList"></div>
+    </section>
+
+    <!-- TIPS PANE -->
+    <section class="pane pane-tips" id="pane-tips">
+      <div class="section-head">
+        <span class="num">γ</span>
+        <h2>Réflexes & bonus</h2>
+      </div>
+
+      <div class="pico-block">
+        <div class="card-kicker">Bonus solo · Pour le marcheur</div>
+        <h3>Stairway to Heaven<em>au lever du soleil</em></h3>
+        <p style="font-size: 14px; line-height: 1.6; margin: 12px 0;">Ce n'est <strong>pas</strong> Pico Ruivo — c'est le sentier <strong>PR1 Vereda do Areeiro</strong>, à <strong>1,2 km</strong> du parking de Pico do Areeiro. Un escalier creusé dans l'arête, au-dessus de la mer de nuages. Aller-retour express avant le lever du soleil.</p>
+        <div class="pico-grid">
+          <div class="pico-cell">
+            <div class="lbl">L'itinéraire</div>
+            <p>Parking <strong>Pico do Areeiro</strong> → sentier PR1. Le Stairway est entre <strong>Ninho da Manta</strong> et <strong>Pedra Rija</strong>. Demi-tour à Pedra Rija.</p>
+          </div>
+          <div class="pico-cell">
+            <div class="lbl">Le timing (vendredi)</div>
+            <p>Réveil <strong>4h30</strong> · départ <strong>4h45</strong> · parking <strong>5h45</strong> · Stairway <strong>6h15</strong> · lever soleil. Retour <strong>9h30</strong>.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a class="loc-chip" data-place="pico-areeiro-parking">Parking Pico do Areeiro</a>
+        </div>
+        <div class="pico-verdict">
+          <strong>Verdict :</strong> à caser <strong>vendredi matin</strong>. Conditions impératives : météo claire vérifiée la veille, frontale, polaire, plein d'essence fait. Prudence sur la route de nuit.
+        </div>
+      </div>
+
+      <div class="card-block dark">
+        <div class="card-num">β</div>
+        <div class="card-kicker">Logistique · réflexes</div>
+        <h3>Les bons réflexes</h3>
+        <ol class="tip-list">
+          <li><strong>Voiture automatique.</strong> Les routes en lacets sont longues, surtout pour la côte nord.</li>
+          <li><strong>Réserver le bateau dès lundi.</strong> Lobosonda et concurrents partent vite à plein.</li>
+          <li><strong>Calheta = avantage marina.</strong> Pas besoin de retourner à Funchal pour la mer.</li>
+          <li><strong>Une polaire dans le sac.</strong> Pico do Areeiro à 1818 m peut tomber à 8 °C même en été.</li>
+          <li><strong>1 h pour l'aéroport.</strong> Vents forts, parfois retards. Partir large samedi matin.</li>
+          <li><strong>Hôtels à viser.</strong> Saccharum Resort &amp; Spa, Hotel Calheta Beach, Quinta do Estreito.</li>
+          <li><strong>Hors-ligne.</strong> Cette appli fonctionne sans réseau — installe-la sur l'écran d'accueil.</li>
+        </ol>
+      </div>
+
+      <div style="text-align: center; padding: 24px 0; font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: var(--whisper);">
+        Bom proveito · Boa viagem 🌊
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM TAB BAR -->
+  <nav class="tabbar">
+    <button class="tab-btn active" data-tab="days">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="label">Jours</span>
+    </button>
+    <button class="tab-btn" data-tab="map">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      <span class="label">Carte</span>
+    </button>
+    <button class="tab-btn" data-tab="eats">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4M5 11l1 9h12l1-9"/><line x1="9" y1="3" x2="9" y2="5"/><line x1="15" y1="3" x2="15" y2="5"/></svg>
+      <span class="label">Saveurs</span>
+    </button>
+    <button class="tab-btn" data-tab="tips">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span class="label">Bonus</span>
+    </button>
+  </nav>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+    <div class="modal-kicker" id="modalKicker">Destination</div>
+    <h3 id="modalTitle">Lieu</h3>
+    <p class="desc" id="modalDesc"></p>
+    <div class="modal-coords" id="modalCoords" title="Tap pour copier"></div>
+    <div class="modal-actions">
+      <a class="btn btn-waze" id="btnWaze" target="_blank" rel="noopener">
+        <span class="btn-icon">🚗</span><span>Naviguer avec Waze</span>
+      </a>
+      <a class="btn btn-primary" id="btnGmaps" target="_blank" rel="noopener">
+        <span class="btn-icon">🗺️</span><span>Ouvrir dans Google Maps</span>
+      </a>
+      <a class="btn btn-secondary" id="btnApple" target="_blank" rel="noopener">
+        <span class="btn-icon">🍎</span><span>Ouvrir dans Plans (Apple)</span>
+      </a>
+      <button class="btn btn-secondary" id="btnShare">
+        <span class="btn-icon">↗︎</span><span>Partager le lieu</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="settingsClose" aria-label="Fermer">✕</button>
+    <div class="modal-kicker">Réglages</div>
+    <h3>Ton voyage</h3>
+    <div class="settings-row">
+      <label for="tripStart">Date d'arrivée (dimanche)</label>
+      <input type="date" id="tripStart">
+      <div class="help">La date du jour 1. La météo et les dates de chaque journée s'ajustent automatiquement.</div>
+    </div>
+    <div class="settings-row">
+      <label>Données locales</label>
+      <button class="btn btn-secondary" id="resetData" style="margin-top:6px;">Réinitialiser les cases cochées</button>
+    </div>
+    <div class="settings-row">
+      <label>À propos</label>
+      <div class="help">Carnet conçu pour fonctionner hors-ligne. Données météo : Open-Meteo. Cartes : OpenStreetMap.</div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTALL PROMPT -->
+<div class="install-prompt" id="installPrompt">
+  <div class="info">
+    <div class="title">Installer l'appli</div>
+    <div class="sub">Pour l'avoir hors-ligne pendant le voyage</div>
+  </div>
+  <button class="dismiss" id="installDismiss">Plus tard</button>
+  <button id="installAccept">Installer</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Coordonnées copiées</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="app.js"></script>
+</body>
+</html>

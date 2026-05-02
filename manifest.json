@@ -1,0 +1,21 @@
+{
+  "name": "Madère 2026 — Carnet de voyage",
+  "short_name": "Madère 2026",
+  "description": "7 jours à Madère : itinéraire jour par jour, carte interactive et météo, hors-ligne.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf6ec",
+  "theme_color": "#0d2e38",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "lifestyle"]
+}
