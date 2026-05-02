@@ -279,7 +279,21 @@
     padding-top: 14px;
     border-top: 1px dashed rgba(0,0,0,0.12);
     min-height: 48px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+    position: relative;
   }
+  .weather::after {
+    content: "↗";
+    position: absolute;
+    right: 0;
+    top: 18px;
+    font-size: 12px;
+    color: var(--whisper);
+    opacity: 0.6;
+  }
+  .day-hero.featured .weather::after { color: var(--gold); opacity: 0.9; }
+  .weather:active { opacity: 0.6; }
   .day-hero.featured .weather { border-top-color: rgba(255,255,255,0.18); }
   .weather-icon {
     font-size: 32px;

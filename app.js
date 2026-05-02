@@ -176,7 +176,8 @@ function getTripStart() {
     const d = new Date(stored + 'T00:00:00');
     if (!isNaN(d)) return d;
   }
-  return nextSunday();
+  // Default: trip starts Sunday May 17, 2026
+  return new Date('2026-05-17T00:00:00');
 }
 
 function setTripStart(isoDate) {
@@ -352,7 +353,7 @@ function openPlaceModal(placeId) {
   $('#modalTitle').textContent = p.name;
   $('#modalDesc').textContent = p.desc || '';
   $('#modalCoords').textContent = `${p.lat.toFixed(5)}, ${p.lng.toFixed(5)} · tap pour copier`;
-  $('#btnWaze').href  = `https://waze.com/ul?ll=${p.lat}%2C${p.lng}&navigate=yes&zoom=17`;
+  $('#btnWaze').href  = `https://www.waze.com/ul?ll=${p.lat},${p.lng}&navigate=yes`;
   $('#btnGmaps').href = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   $('#btnApple').href = `https://maps.apple.com/?ll=${p.lat},${p.lng}&q=${encodeURIComponent(p.name)}`;
   $('#btnShare').onclick = async () => {
