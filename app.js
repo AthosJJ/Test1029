@@ -33,7 +33,25 @@ const PLACES = {
   'sao-lourenco':          { name: "Ponta de São Lourenço",       lat: 32.74322, lng: -16.70094, type: 'sight', desc: "Pointe est de l'île. Parking PR8, panorama lunaire de roches rouges et noires." },
   'rabacal':               { name: "Parking Rabaçal",             lat: 32.75472, lng: -17.13375, type: 'sight', desc: "Altitude 1291 m. Point de départ des Levadas das 25 Fontes (PR6) et do Risco. Sentiers plats le long des canaux." },
   'ponta-sol':             { name: "Ponta do Sol",                lat: 32.66670, lng: -17.10000, type: 'sight', desc: "Village dans le creux d'une falaise, le plus ensoleillé de l'île." },
-  'camara-lobos':          { name: "Câmara de Lobos",             lat: 32.65043, lng: -16.97718, type: 'sight', desc: "Port de pêche peint par Churchill. Un dernier expresso face aux barques colorées." }
+  'camara-lobos':          { name: "Câmara de Lobos",             lat: 32.65043, lng: -16.97718, type: 'sight', desc: "Port de pêche peint par Churchill. Un dernier expresso face aux barques colorées." },
+
+  // Festa da Flor 2026 — venues vérifiés (Wikipédia, Visit Madeira, Largo da Restauração wikidata)
+  'avenida-mar':           { name: "Avenida do Mar (Cortejo)",     lat: 32.64475, lng: -16.90889, type: 'event', desc: "Avenida do Mar e das Comunidades Madeirenses, Funchal. Le grand cortège fleuri y défile dimanche 17 mai à 16h30. Stationnement saturé — venir en bus / taxi / à pied depuis le marché." },
+  'avenida-arriaga':       { name: "Avenida Arriaga (Mercado da Flor)", lat: 32.64750, lng: -16.91075, type: 'event', desc: "Avenue commerciale piétonne au centre de Funchal. Mercado da Flor + tapis floraux entre la Loja do Cidadão et le Largo do Corpo Santo. Marché 10h–minuit (sam jusqu'à 1h)." },
+  'pavilhao-flor':         { name: "Pavilhão da Flor",             lat: 32.64739, lng: -16.90969, type: 'event', desc: "Largo da Restauração, à l'extrémité est de l'Avenida Arriaga (face au fort São Lourenço). 71e Exposição da Flor, ouverte tous les jours du séjour. Entrée libre, ~30 min." },
+  'praca-povo':            { name: "Praça do Povo (Classic Cars)", lat: 32.64411, lng: -16.90889, type: 'event', desc: "Place inaugurée en 2014, sur le front de mer face à la marina de Funchal. Madeira Classic Car Revival du 22 au 24 mai. Concours costume vintage samedi 14h–15h." },
+  'canico':                { name: "Caniço (Festa da Cebola)",     lat: 32.64850, lng: -16.84290, type: 'event', desc: "Village de Caniço, municipalité de Santa Cruz, ~50 min de Funchal. Festa da Cebola du 22 au 24 mai : cortège de tracteurs, enchère d'oignons, musique et stands." },
+
+  // Restaurants vérifiés — TripAdvisor / Michelin Guide / TheFork (mai 2026)
+  'akua':              { name: "Ákua by Chef Júlio Pereira",  lat: 32.64780, lng: -16.90820, type: 'meal', desc: "★ Michelin Guide. Cuisine madérienne contemporaine, accent fruits de mer. Rua dos Murças 6, Funchal centre. TripAdvisor 4.5/5, Google 4.7. €€€ — réservation impérative pour 5." },
+  'kampo':             { name: "Kampo by Chef Júlio Pereira", lat: 32.64810, lng: -16.90700, type: 'meal', desc: "★ Michelin Guide. Sœur d'Ákua, plus orientée viande (queue de bœuf, T-bone, surf-and-turf). Rua da Alfândega 74, Funchal. TripAdvisor 4.5+, Google 4.7. €€-€€€." },
+  'razao':             { name: "RAZÃO por Octávio Freitas",   lat: 32.72200, lng: -17.18100, type: 'meal', desc: "Chef ex-Il Gallo d'Oro (2 ⭐). Cuisine d'auteur, produit régional. À l'hôtel Socalco Nature Calheta, à 5 min de la base. €€€. Réservation impérative." },
+  'onda-azul':         { name: "Onda Azul (Calheta Beach)",   lat: 32.71970, lng: -17.17280, type: 'meal', desc: "Restaurant du Calheta Beach Hotel, en bord de plage. Madère + international. TheFork 8.5/10. €€. Bonne option sans réserver très en avance." },
+  'old-pharmacy':      { name: "The Old Pharmacy",            lat: 32.67960, lng: -17.10060, type: 'meal', desc: "Tapas, petiscos, brunch, bar à vins, ambiance lounge. Centre du village face à l'église. TripAdvisor 4.3/5 (618 avis), Google 4.5. €€." },
+  'orca-porto-moniz':  { name: "Restaurante Orca",            lat: 32.86820, lng: -17.17470, type: 'meal', desc: "Plan B si Cachalote complet — juste à côté, même rotunda des piscines. Poisson madérien, même vue. €€." },
+  'avenida-gastropub': { name: "Avenida GastroPub & Grill",   lat: 32.67310, lng: -17.06170, type: 'meal', desc: "Sur l'avenue front de mer de Ribeira Brava. Burgers, viandes grillées, poissons. TripAdvisor 4.3/5. €€. Pratique sur la route Calheta ↔ Funchal." },
+  'o-recante':         { name: "Restaurante O Recante",       lat: 32.74150, lng: -16.73400, type: 'meal', desc: "★ Top de l'est (TripAdvisor 4.8/5, ~185 avis). Pêche du jour, poulpe tendre, gambas à l'ail. Estrada de São Lourenço 67, Caniçal — sur la route du PR8. €€. Réservation conseillée." },
+  'mercado-velho':     { name: "Restaurante Mercado Velho",   lat: 32.71790, lng: -16.76410, type: 'meal', desc: "Dans un bâtiment XVIIe restauré, sous les platanes (Alameda dos Plátanos), Machico. Poisson madérien traditionnel. €€." }
 };
 
 const DAYS = [
@@ -46,7 +64,7 @@ const DAYS = [
       { time: "16:30", title: "★ Cortejo Alegórico (Festa da Flor)", body: "Le grand cortège fleuri, Avenida do Mar à Funchal. Coup de chance : il tombe le jour de l'arrivée. ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. Si fatigue : zapper et filer à Calheta.", places: [] },
       { time: "18:30", title: "Cap à l'ouest", body: "VR1 puis VE3 — 50 min de routes côtières jusqu'à Estreito da Calheta.", places: ['estreito'] },
       { time: "19:30", title: "Check-in & piscine", body: "Les jambes posées, le voyage commence vraiment.", places: [] },
-      { time: "21:00", title: "Dîner libre à Calheta", body: "Selon l'heure d'arrivée et la fatigue : restaurant de l'hôtel, ou village. Réservation en direct conseillée pour 5 personnes.", places: [] }
+      { time: "21:00", title: "Dîner — Razão (option ★)", body: "À 5 min de l'hôtel : RAZÃO par Octávio Freitas (ex-Il Gallo d'Oro, 2 étoiles Michelin) au Socalco Nature. Réservation impérative pour 5. Sinon : Onda Azul à la marina.", places: ['razao', 'onda-azul'] }
     ]
   },
   {
@@ -60,7 +78,7 @@ const DAYS = [
       { time: "14:30", title: "Exposição da Flor", body: "Pavilhão da Flor, Largo da Restauração — 71e exposition florale annuelle, ouverte tous les jours du voyage. Courte (~30 min).", places: [] },
       { time: "15:30", title: "Téléphérique de Monte", body: "15 minutes de cabine au-dessus de la baie. Au sommet : Jardin Tropical de Monte Palace.", places: ['telepherique', 'monte-palace'] },
       { time: "17:00", title: "Carros de cesto", body: "Descente en panier d'osier pour les plus jeunes ; les parents redescendent en téléphérique.", places: [] },
-      { time: "Soir", title: "Dégustation Blandy's", body: "Cave historique du vin de Madère, Av. Arriaga 28. Réserver sur blandyswinelodge.com.", places: ['blandys'] }
+      { time: "Soir", title: "Dîner — Ákua ★", body: "Cuisine madérienne contemporaine du chef Júlio Pereira (Michelin Guide). Rua dos Murças 6, en plein centre Funchal. Alternative : Kampo (sœur d'Ákua, plus orientée viande).", places: ['akua', 'kampo'] }
     ]
   },
   {
@@ -81,7 +99,7 @@ const DAYS = [
     items: [
       { time: "10:00", title: "Route panoramique", body: "Cascata dos Anjos qui tombe sur la chaussée, Seixal et son sable noir, forêt de Fanal si la brume joue le jeu.", places: ['cascata-anjos', 'seixal', 'fanal'] },
       { time: "12:30", title: "Porto Moniz", body: "Piscines naturelles de lave — eau de mer dans la roche noire. La carte postale de Madère.", places: ['porto-moniz'] },
-      { time: "14:00", title: "Déjeuner — Cachalote", body: "Poisson grillé en terrasse posée sur la roche, face aux piscines. Maison de 1969.", places: ['cachalote'] }
+      { time: "14:00", title: "Déjeuner aux piscines", body: "Cachalote (poisson grillé, terrasse sur la roche, maison de 1969) ou son voisin direct Orca si complet — même rotunda des piscines.", places: ['cachalote', 'orca-porto-moniz'] }
     ]
   },
   {
@@ -102,7 +120,7 @@ const DAYS = [
     subtitle: "Levada douce, parents au repos le matin",
     items: [
       { time: "Matin", title: "Levada das 25 Fontes ou do Risco", body: "Sentiers PR6 plats (alt. 1291 m au départ) le long des canaux d'irrigation. La Madère secrète — mousse et eau claire.", places: ['rabacal'] },
-      { time: "13:00", title: "Déjeuner — Ponta do Sol", body: "Village dans le creux d'une falaise, le plus ensoleillé de l'île.", places: ['ponta-sol'] },
+      { time: "13:00", title: "Déjeuner — The Old Pharmacy", body: "Tapas, brunch, bar à vins en centre Ponta do Sol (TripAdvisor 4.3, ~620 avis). Le village est dans le creux d'une falaise — le plus ensoleillé de l'île.", places: ['old-pharmacy', 'ponta-sol'] },
       { time: "18:30", title: "Coucher de soleil au Cabo Girão", body: "Ou depuis la piscine, selon les forces.", places: ['cabo-girao'] },
       { time: "20:30", title: "Dîner d'adieu — Vila da Carne", body: "L'espetada de référence à Câmara de Lobos. Sœur jumelle de Vila do Peixe (juste à côté).", places: ['vila-carne'] }
     ]
@@ -238,7 +256,7 @@ function renderDays() {
       const chips = it.places.map(pid => {
         const p = PLACES[pid];
         if (!p) return '';
-        const cls = p.type === 'meal' ? 'loc-chip meal' : 'loc-chip';
+        const cls = p.type === 'meal' ? 'loc-chip meal' : p.type === 'event' ? 'loc-chip event' : 'loc-chip';
         return `<a class="${cls}" data-place="${pid}">${escapeHtml(p.name)}</a>`;
       }).join('');
       return `
@@ -272,14 +290,7 @@ function renderDays() {
       </article>`;
   }).join('');
 
-  // Wire chip clicks
-  $$('.loc-chip', pager).forEach(chip => {
-    chip.addEventListener('click', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      openPlaceModal(chip.dataset.place);
-    });
-  });
+  // Chip clicks are wired globally via setupChipDelegation()
 
   // Wire check toggles
   $$('.tl-check', pager).forEach(check => {
@@ -360,13 +371,17 @@ function openPlaceModal(placeId) {
   $('#btnGmaps').style.display = 'flex';
   $('#btnGmaps').innerHTML = '<span class="btn-icon">🗺️</span><span>Ouvrir dans Google Maps</span>';
   const ipmaBtn = $('#btnIpma'); if (ipmaBtn) ipmaBtn.remove();
-  $('#modalKicker').textContent = p.type === 'meal' ? 'Restaurant' : 'Destination';
+  const kicker = p.type === 'meal' ? 'Restaurant' : p.type === 'event' ? 'Événement' : 'Destination';
+  $('#modalKicker').textContent = kicker;
   $('#modalTitle').textContent = p.name;
   $('#modalDesc').textContent = p.desc || '';
-  $('#modalCoords').textContent = `${p.lat.toFixed(5)}, ${p.lng.toFixed(5)} · tap pour copier`;
-  $('#btnWaze').href  = `https://www.waze.com/ul?ll=${p.lat},${p.lng}&navigate=yes`;
-  $('#btnGmaps').href = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
-  $('#btnApple').href = `https://maps.apple.com/?ll=${p.lat},${p.lng}&q=${encodeURIComponent(p.name)}`;
+  $('#modalCoords').textContent = '';
+  // Use ?q=LAT,LNG for Google Maps — drops a pin at exact coords (no fuzzy search-by-coord)
+  // Use navigate=no for Waze — opens destination as pin, user decides to route (avoids
+  // "could not find a route" when user is far from destination, e.g. another country)
+  $('#btnWaze').href  = `https://waze.com/ul?ll=${p.lat},${p.lng}&navigate=no&zoom=17`;
+  $('#btnGmaps').href = `https://www.google.com/maps?q=${p.lat},${p.lng}`;
+  $('#btnApple').href = `https://maps.apple.com/?q=${p.lat},${p.lng}`;
   $('#btnShare').onclick = async () => {
     const text = `${p.name} — https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
     if (navigator.share) {
@@ -375,12 +390,7 @@ function openPlaceModal(placeId) {
       try { await navigator.clipboard.writeText(text); toast('Lien copié'); } catch {}
     }
   };
-  $('#modalCoords').onclick = async () => {
-    try {
-      await navigator.clipboard.writeText(`${p.lat}, ${p.lng}`);
-      toast('Coordonnées copiées');
-    } catch {}
-  };
+  $('#modalCoords').onclick = null;
   openModal('#modal');
 }
 
@@ -558,11 +568,20 @@ function renderRestaurants() {
     placeDays[pid].add(day.id);
   })));
   const list = $('#restaurantList');
+  // Show every meal place — even ones not pinned to a specific day,
+  // so the user has the full set of vetted options.
   const rows = Object.entries(PLACES)
-    .filter(([pid, p]) => p.type === 'meal' && placeDays[pid])
+    .filter(([, p]) => p.type === 'meal')
+    .sort(([a], [b]) => {
+      const da = placeDays[a] ? Math.min(...placeDays[a]) : 99;
+      const db = placeDays[b] ? Math.min(...placeDays[b]) : 99;
+      return da - db;
+    })
     .map(([pid, p]) => {
-      const days = [...placeDays[pid]].sort();
-      const dayLabel = days.map(d => `${DAYS[d-1].dow}`).join(' · ');
+      const days = placeDays[pid] ? [...placeDays[pid]].sort() : [];
+      const dayLabel = days.length
+        ? days.map(d => DAYS[d-1].dow).join(' · ')
+        : 'À la carte';
       return `
         <div class="card-block" style="padding:18px;margin-bottom:10px;cursor:pointer;" data-place="${pid}">
           <div class="card-kicker">${dayLabel}</div>
@@ -710,8 +729,31 @@ function setupInstall() {
 
 function setupSW() {
   if (!('serviceWorker' in navigator)) return;
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('sw.js');
+      // Detect a new SW waiting and offer to refresh
+      reg.addEventListener('updatefound', () => {
+        const sw = reg.installing;
+        if (!sw) return;
+        sw.addEventListener('statechange', () => {
+          if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+            // New version installed — auto-activate next time and notify
+            toast('Nouvelle version dispo · recharger pour mettre à jour', 4000);
+            sw.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      });
+      // When SW takes control, reload once so the user sees fresh code
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloaded) return;
+        reloaded = true;
+        window.location.reload();
+      });
+      // Periodic check (every 30 min while app is open)
+      setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+    } catch {}
   });
 }
 
@@ -738,6 +780,18 @@ function autoSelectToday() {
 
 // ---------- BOOT ----------------------------------------------------
 
+function setupChipDelegation() {
+  // Single delegated listener so chips work everywhere — day timelines,
+  // Bonus tab (Festa da Flor cards, Stairway block), restaurant cards, etc.
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.loc-chip[data-place]');
+    if (!chip) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openPlaceModal(chip.dataset.place);
+  });
+}
+
 function boot() {
   renderDays();
   renderRestaurants();
@@ -747,6 +801,7 @@ function boot() {
   setupSwipeNav();
   setupPagerScrollSync();
   setupMap();
+  setupChipDelegation();
   setupInstall();
   setupSW();
   autoSelectToday();

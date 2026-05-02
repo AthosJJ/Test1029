@@ -5,7 +5,7 @@
 //   - OSM tiles & weather API: stale-while-revalidate
 //   - Everything else: network with cache fallback
 
-const VERSION = 'mad26-v1';
+const VERSION = 'mad26-v3';
 const APP_CACHE = `${VERSION}-app`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -24,9 +24,14 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(APP_CACHE)
       .then(cache => cache.addAll(APP_SHELL.map(u => new Request(u, { credentials: 'omit' }))))
-      .then(() => self.skipWaiting())
       .catch(() => {})
   );
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('activate', event => {

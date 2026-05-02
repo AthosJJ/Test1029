@@ -448,6 +448,8 @@
   }
   .loc-chip.meal { background: #fff3e6; border-color: rgba(212,165,116,0.4); }
   .loc-chip.meal::before { content: "🍽️"; }
+  .loc-chip.event { background: #fbe9e7; border-color: rgba(200,85,61,0.4); color: var(--terracotta); }
+  .loc-chip.event::before { content: "✿"; }
 
   /* === SWIPE NAV BUTTONS === */
   .swipe-nav {
@@ -897,9 +899,9 @@
     font-size: 11px;
     color: var(--whisper);
     margin-bottom: 14px;
-    cursor: pointer;
     user-select: all;
   }
+  .modal-coords:empty { display: none; }
   .modal-actions {
     display: flex;
     flex-direction: column;
@@ -1123,37 +1125,42 @@
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Dim 17 mai · 16h30 · ★ JOUR D'ARRIVÉE</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Grande Cortejo Alegórico</div>
-            <div style="font-size:13px;line-height:1.5;">Le grand cortège fleuri, ~1500 figurants, chars en fleurs. <strong>Avenida do Mar, Funchal</strong>. Visible gratuitement le long de l'avenue. <strong>Coup de chance</strong> : il tombe le jour de l'arrivée — détour possible en sortant de l'aéroport (avant Calheta).</div>
+            <div style="font-size:13px;line-height:1.5;">Le grand cortège fleuri, ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. <strong>Coup de chance</strong> : il tombe le jour de l'arrivée — détour possible avant Calheta.</div>
+            <div style="margin-top:8px;"><a class="loc-chip event" data-place="avenida-mar">Avenida do Mar, Funchal</a></div>
           </div>
 
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Lun 18 → Ven 22 · toute la journée</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Tapis floraux + Marché + Expo</div>
-            <div style="font-size:13px;line-height:1.5;">18 tapis floraux (Loja do Cidadão → Largo do Corpo Santo), Mercado da Flor sur l'Avenida Arriaga (10h–minuit), Exposição da Flor au Pavilhão da Flor. Tout est en centre Funchal, gratuit.</div>
+            <div style="font-size:13px;line-height:1.5;">18 tapis floraux entre Loja do Cidadão et Largo do Corpo Santo, Mercado da Flor (10h–minuit) sur l'Avenida Arriaga, et Exposição da Flor au Pavilhão da Flor. Tout en centre Funchal, gratuit.</div>
+            <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;"><a class="loc-chip event" data-place="avenida-arriaga">Avenida Arriaga</a><a class="loc-chip event" data-place="pavilhao-flor">Pavilhão da Flor</a></div>
           </div>
 
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Jeu 21 · 21h00</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Orquestra Clássica + Ensemble XXI</div>
-            <div style="font-size:13px;line-height:1.5;">Concert symphonique à Funchal (vérifier la salle sur cultura.madeira.gov.pt).</div>
+            <div style="font-size:13px;line-height:1.5;">Concert symphonique à Funchal. Salle à confirmer sur <a href="https://cultura.madeira.gov.pt/inicio/a-saber/agenda-cultural.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;">cultura.madeira.gov.pt</a>.</div>
           </div>
 
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Ven 22 → Dim 24</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Madeira Classic Car Revival</div>
-            <div style="font-size:13px;line-height:1.5;">Exposition de voitures anciennes, Praça do Povo, Funchal. <strong>Sam 23 · 14h–15h</strong> : "Vestir à Época" (concours du meilleur costume vintage). Gratuit.</div>
+            <div style="font-size:13px;line-height:1.5;">Exposition de voitures anciennes. <strong>Sam 23 · 14h–15h</strong> : "Vestir à Época" (concours costume vintage). Gratuit.</div>
+            <div style="margin-top:8px;"><a class="loc-chip event" data-place="praca-povo">Praça do Povo, Funchal</a></div>
           </div>
 
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Ven 22 → Dim 24 · Caniço</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Festa da Cebola</div>
-            <div style="font-size:13px;line-height:1.5;">Fête authentique de l'oignon à Caniço (Santa Cruz, ~50 min de Funchal). Cortège de tracteurs, enchère d'oignons, musique trad', stands de bouffe. Plus local et moins touristique que Funchal.</div>
+            <div style="font-size:13px;line-height:1.5;">Fête authentique de l'oignon (~50 min de Funchal). Cortège de tracteurs, enchère d'oignons, musique trad', stands de bouffe. Plus local et moins touristique.</div>
+            <div style="margin-top:8px;"><a class="loc-chip event" data-place="canico">Caniço, Santa Cruz</a></div>
           </div>
 
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Lun 18 → Sam 23 · Trans Madeira</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Course VTT enduro 6 jours</div>
             <div style="font-size:13px;line-height:1.5;">L'enduro VTT traverse l'île de Machico (est) à Calheta (ouest). Dernière étape <strong>samedi 23 à Calheta</strong> — pile sur la base. Spectateurs bienvenus.</div>
+            <div style="margin-top:8px;"><a class="loc-chip event" data-place="marina-calheta">Marina de Calheta (finale)</a></div>
           </div>
 
         </div>
