@@ -799,7 +799,30 @@ function setupInstall() {
 
 // ---------- SERVICE WORKER ------------------------------------------
 
-const APP_VERSION = 'mad26-v5';
+const APP_VERSION = 'mad26-v6';
+
+// If the URL contains ?refresh=1 (or ?refresh=anything), wipe caches and reload
+// without the param. Acts as a one-tap "kick the stale Safari cache" link the
+// user can save as a bookmark and visit when the app feels stuck on old code.
+(function handleRefreshParam() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('refresh')) return;
+    Promise.all([
+      'serviceWorker' in navigator
+        ? navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r => r.unregister())))
+        : Promise.resolve(),
+      'caches' in window
+        ? caches.keys().then(ks => Promise.all(ks.map(k => caches.delete(k))))
+        : Promise.resolve()
+    ]).finally(() => {
+      const u = new URL(window.location.href);
+      u.searchParams.delete('refresh');
+      u.searchParams.set('v', Date.now());
+      window.location.replace(u.toString());
+    });
+  } catch {}
+})();
 
 function setupSW() {
   if (!('serviceWorker' in navigator)) return;
