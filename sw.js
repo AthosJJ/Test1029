@@ -5,7 +5,7 @@
 //   - OSM tiles & weather API: stale-while-revalidate
 //   - Everything else: network with cache fallback
 
-const VERSION = 'mad26-v6';
+const VERSION = 'mad26-v7';
 const APP_CACHE = `${VERSION}-app`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -52,25 +52,52 @@ function isFontFile(url) {
   return /fonts\.gstatic\.com/.test(url);
 }
 
+function isAppShell(url) {
+  // The HTML, JS, manifest and icon — anything we want to ship updates for
+  // immediately when the user is online.
+  return /\/(index\.html|app\.js|manifest\.json)(\?.*)?$/.test(url) ||
+         /\/$/.test(url) ||
+         /\/assets\//.test(url) ||
+         /unpkg\.com\/leaflet/.test(url);
+}
+
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = req.url;
 
-  // Stale-while-revalidate for tiles, weather, fonts
+  // Stale-while-revalidate for tiles, weather, fonts (large/slow, OK to be a bit stale)
   if (isTile(url) || isWeather(url) || isFontFile(url)) {
     event.respondWith(staleWhileRevalidate(req));
     return;
   }
 
-  // Default: cache-first with network fallback
+  // App shell: network-first, fall back to cache when offline.
+  // This is the key change — previously cache-first, which meant users could
+  // be stuck on stale code for days. Network-first ships updates immediately
+  // when online; offline still works (cache fallback).
+  if (isAppShell(url)) {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          if (res && res.status === 200 && (res.type === 'basic' || res.type === 'cors')) {
+            const copy = res.clone();
+            caches.open(APP_CACHE).then(c => c.put(req, copy)).catch(() => {});
+          }
+          return res;
+        })
+        .catch(() => caches.match(req).then(c => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Everything else: cache-first with background refresh
   event.respondWith(
     caches.match(req).then(cached => {
       if (cached) {
-        // Refresh in background
         fetch(req).then(res => {
           if (res && res.status === 200) {
-            caches.open(APP_CACHE).then(c => c.put(req, res.clone())).catch(() => {});
+            caches.open(RUNTIME).then(c => c.put(req, res.clone())).catch(() => {});
           }
         }).catch(() => {});
         return cached;
