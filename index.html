@@ -589,6 +589,7 @@
     font-weight: 600;
   }
   .leaflet-pin.meal { background: var(--gold); }
+  .leaflet-pin.event { background: var(--moss); }
 
   /* === EATS PANE === */
   .pane-eats { padding: 14px 18px calc(100px + var(--safe-bottom)); }
@@ -1067,9 +1068,7 @@
     <!-- MAP PANE -->
     <section class="pane pane-map" id="pane-map">
       <div class="map-filters" id="mapFilters">
-        <button class="filter-pill active" data-filter="all">Tous</button>
-        <button class="filter-pill" data-filter="sight">Sites</button>
-        <button class="filter-pill" data-filter="meal">Restaurants</button>
+        <button class="filter-pill active" data-filter="all">Tout le voyage</button>
         <button class="filter-pill" data-filter="d1">Dim</button>
         <button class="filter-pill" data-filter="d2">Lun</button>
         <button class="filter-pill" data-filter="d3">Mar</button>
@@ -1126,7 +1125,11 @@
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:4px;">Dim 17 mai · 16h30 · ★ JOUR D'ARRIVÉE</div>
             <div style="font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin-bottom:4px;">Grande Cortejo Alegórico</div>
             <div style="font-size:13px;line-height:1.5;">Le grand cortège fleuri, ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. <strong>Coup de chance</strong> : il tombe le jour de l'arrivée — détour possible avant Calheta.</div>
-            <div style="margin-top:8px;"><a class="loc-chip event" data-place="avenida-mar">Avenida do Mar, Funchal</a></div>
+            <div style="margin-top:10px;padding:10px 12px;background:rgba(0,0,0,0.18);border-radius:10px;font-size:12px;line-height:1.5;">
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.85;margin-bottom:6px;">🅿️ Bon plan parking</div>
+              <strong>Parque Almirante Reis</strong> (~€10/jour, ouvert dim). 8–10 min à pied de l'Avenida do Mar. <strong>Accès uniquement par Rua D. Carlos I</strong> — le tunnel Sá Carneiro est fermé pendant le cortège. Arriver avant 14h.
+            </div>
+            <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;"><a class="loc-chip event" data-place="avenida-mar">Avenida do Mar (cortège)</a><a class="loc-chip" data-place="parking-almirante">Parking Almirante Reis</a></div>
           </div>
 
           <div style="background:rgba(255,255,255,0.12);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);">

@@ -6,52 +6,57 @@
 // ---------- DATA ----------------------------------------------------
 
 // Coordinates verified May 2026 against IPMA, OSM, Wikipedia, sea-seek, Michelin.
+// `q` field is the canonical Google/Apple Maps query (preferred over raw coords —
+// avoids the "pin in the sea" problem when coords are slightly off the actual building).
 const PLACES = {
-  'aeroport':              { name: "Aéroport de Madère",          lat: 32.69780, lng: -16.77460, type: 'sight', desc: "Aéroport Cristiano Ronaldo (FNC). Vents traversiers fréquents — prévoir large pour les retours." },
-  'estreito':              { name: "Estreito da Calheta",         lat: 32.73798, lng: -17.18095, type: 'sight', desc: "Le village de la base. Côte sud-ouest, climat doux, à 5 min de la marina." },
-  'praia-calheta':         { name: "Praia da Calheta",            lat: 32.72035, lng: -17.17831, type: 'sight', desc: "Plage de sable jaune importé du Maroc. Pontons plats, eau calme, parfaite pour une première baignade." },
-  'marina-calheta':        { name: "Marina da Calheta",           lat: 32.71781, lng: -17.17211, type: 'sight', desc: "Port de plaisance. Point d'embarquement pour les sorties en mer (Lobosonda, On Tales, H2O Madeira)." },
-  'mercado':               { name: "Mercado dos Lavradores",      lat: 32.64865, lng: -16.90377, type: 'sight', desc: "Marché central de Funchal. Halle Art déco, fruits exotiques (anonas, maracujás), poissons frais. Attention aux prix gonflés des fruits — négocier ou observer avant." },
-  'cathedrale':            { name: "Cathédrale Sé de Funchal",    lat: 32.64233, lng: -16.90500, type: 'sight', desc: "Cathédrale du XVe siècle. Plafond mudéjar en bois de cèdre. Largo da Sé." },
-  'zona-velha':            { name: "Zona Velha de Funchal",       lat: 32.64770, lng: -16.90670, type: 'sight', desc: "Vieille ville plate, ruelles pavées, portes peintes (Projecto ARTeria). Restaurants en terrasse rua de Santa Maria." },
-  'telepherique':          { name: "Téléphérique Funchal-Monte",  lat: 32.64780, lng: -16.90670, type: 'sight', desc: "Station basse au parc Almirante Reis (à côté de la Zona Velha). 15 min de cabine au-dessus de la baie." },
-  'monte-palace':          { name: "Monte Palace Tropical Garden", lat: 32.67404, lng: -16.90200, type: 'sight', desc: "Jardin tropical au sommet de Monte. Mosaïques portugaises (azulejos), étangs à carpes koï, jardins japonais." },
-  'blandys':               { name: "Blandy's Wine Lodge",         lat: 32.64700, lng: -16.91170, type: 'sight', desc: "Cave historique du vin de Madère, Av. Arriaga 28. Visite guidée + dégustation, parfaitement accessible." },
-  'vila-peixe':            { name: "Vila do Peixe",               lat: 32.65043, lng: -16.97718, type: 'meal',  desc: "Poisson frais grillé au gros sel face au port de Câmara de Lobos. Référence Michelin Guide. Rua Dr João Abel de Freitas 30A." },
-  'vila-carne':            { name: "Vila da Carne",               lat: 32.65043, lng: -16.97718, type: 'meal',  desc: "Sœur jumelle de Vila do Peixe, juste à côté. Espetada de référence à Câmara de Lobos." },
-  'cascata-anjos':         { name: "Cascata dos Anjos",           lat: 32.68764, lng: -17.11557, type: 'sight', desc: "Cascade qui tombe sur la chaussée (ancienne ER101). On passe sous les embruns en voiture, fenêtres fermées." },
-  'seixal':                { name: "Praia do Seixal",             lat: 32.82400, lng: -17.10932, type: 'sight', desc: "Plage de sable noir volcanique sur la côte nord. Cadre spectaculaire entre falaises." },
-  'fanal':                 { name: "Forêt de Fanal",              lat: 32.80951, lng: -17.14098, type: 'sight', desc: "Posto Florestal do Fanal. Forêt de lauriers (Laurissilva) brumeuse, irréelle quand la brume descend. Patrimoine Unesco." },
-  'porto-moniz':           { name: "Piscines de Porto Moniz",     lat: 32.86804, lng: -17.16635, type: 'sight', desc: "Piscines naturelles aménagées dans la lave. Vestiaires, douches, accès facile." },
-  'cachalote':             { name: "Restaurante Cachalote",       lat: 32.86804, lng: -17.16635, type: 'meal',  desc: "Poisson grillé en terrasse, posé sur la roche volcanique face aux piscines. Maison de 1969. Forte de São João Batista." },
-  'cabo-girao':            { name: "Cabo Girão Skywalk",          lat: 32.65652, lng: -17.00444, type: 'sight', desc: "Plateforme de verre suspendue à 580 m, l'une des plus hautes falaises maritimes d'Europe." },
-  'pico-areeiro':          { name: "Pico do Areeiro",             lat: 32.73477, lng: -16.92871, type: 'sight', desc: "3e sommet de l'île (1818 m), accessible en voiture. Vue à 360° sur le centre montagneux." },
-  'pico-areeiro-parking':  { name: "Parking Pico do Areeiro",     lat: 32.73477, lng: -16.92871, type: 'sight', desc: "Parking du sommet (payant). Point de départ du sentier PR1 vers Pico Ruivo / Stairway to Heaven." },
-  'ribeiro-frio':          { name: "Ribeiro Frio",                lat: 32.82046, lng: -16.86745, type: 'meal',  desc: "Posto Aquícola : truites élevées sur place, cuisine simple en pleine forêt de lauriers. Sur la route ER103, côte nord." },
-  'santana':               { name: "Casas de Santana",            lat: 32.80526, lng: -16.88241, type: 'sight', desc: "Maisons triangulaires colorées au toit de chaume, emblèmes du nord de l'île. Trois sont conservées au Parque Temático." },
-  'cantinho-serra':        { name: "Cantinho da Serra (Santana)", lat: 32.80526, lng: -16.88241, type: 'meal',  desc: "Cuisine madérienne au feu de bois, Estrada do Pico das Pedras, Santana — à combiner avec la visite des Casas. ⚠️ N'EST PAS à Calheta." },
-  'sao-lourenco':          { name: "Ponta de São Lourenço",       lat: 32.74322, lng: -16.70094, type: 'sight', desc: "Pointe est de l'île. Parking PR8, panorama lunaire de roches rouges et noires." },
-  'rabacal':               { name: "Parking Rabaçal",             lat: 32.75472, lng: -17.13375, type: 'sight', desc: "Altitude 1291 m. Point de départ des Levadas das 25 Fontes (PR6) et do Risco. Sentiers plats le long des canaux." },
-  'ponta-sol':             { name: "Ponta do Sol",                lat: 32.66670, lng: -17.10000, type: 'sight', desc: "Village dans le creux d'une falaise, le plus ensoleillé de l'île." },
-  'camara-lobos':          { name: "Câmara de Lobos",             lat: 32.65043, lng: -16.97718, type: 'sight', desc: "Port de pêche peint par Churchill. Un dernier expresso face aux barques colorées." },
+  'aeroport':              { name: "Aéroport de Madère",          q: "Aeroporto da Madeira Cristiano Ronaldo",                          lat: 32.69780, lng: -16.77460, type: 'sight', desc: "Aéroport Cristiano Ronaldo (FNC). Vents traversiers fréquents — prévoir large pour les retours." },
+  'estreito':              { name: "Estreito da Calheta",         q: "Estreito da Calheta, Madeira",                                    lat: 32.73798, lng: -17.18095, type: 'sight', desc: "Le village de la base. Côte sud-ouest, climat doux, à 5 min de la marina." },
+  'praia-calheta':         { name: "Praia da Calheta",            q: "Praia da Calheta, Madeira",                                       lat: 32.72035, lng: -17.17831, type: 'sight', desc: "Plage de sable jaune importé du Maroc. Pontons plats, eau calme, parfaite pour une première baignade." },
+  'marina-calheta':        { name: "Marina da Calheta",           q: "Marina da Calheta, Madeira",                                      lat: 32.71781, lng: -17.17211, type: 'sight', desc: "Port de plaisance. Point d'embarquement pour les sorties en mer (Lobosonda, On Tales, H2O Madeira)." },
+  'mercado':               { name: "Mercado dos Lavradores",      q: "Mercado dos Lavradores, Funchal",                                 lat: 32.64865, lng: -16.90377, type: 'sight', desc: "Marché central de Funchal. Halle Art déco, fruits exotiques (anonas, maracujás), poissons frais. Attention aux prix gonflés des fruits — négocier ou observer avant." },
+  'cathedrale':            { name: "Cathédrale Sé de Funchal",    q: "Sé Catedral do Funchal",                                          lat: 32.64760, lng: -16.90880, type: 'sight', desc: "Cathédrale du XVe siècle. Plafond mudéjar en bois de cèdre. Largo da Sé." },
+  'zona-velha':            { name: "Zona Velha de Funchal",       q: "Zona Velha do Funchal Rua de Santa Maria",                        lat: 32.64790, lng: -16.90360, type: 'sight', desc: "Vieille ville plate, ruelles pavées, portes peintes (Projecto ARTeria). Restaurants en terrasse rua de Santa Maria." },
+  'telepherique':          { name: "Téléphérique Funchal-Monte",  q: "Teleférico do Funchal estação Almirante Reis",                    lat: 32.64850, lng: -16.90360, type: 'sight', desc: "Station basse au parc Almirante Reis (à côté de la Zona Velha). 15 min de cabine au-dessus de la baie." },
+  'monte-palace':          { name: "Monte Palace Tropical Garden", q: "Monte Palace Tropical Garden Funchal",                            lat: 32.67404, lng: -16.90200, type: 'sight', desc: "Jardin tropical au sommet de Monte. Mosaïques portugaises (azulejos), étangs à carpes koï, jardins japonais." },
+  'blandys':               { name: "Blandy's Wine Lodge",         q: "Blandy's Wine Lodge Funchal Avenida Arriaga",                     lat: 32.64720, lng: -16.91180, type: 'sight', desc: "Cave historique du vin de Madère, Av. Arriaga 28. Visite guidée + dégustation, parfaitement accessible." },
+  'vila-peixe':            { name: "Vila do Peixe",               q: "Vila do Peixe restaurante Câmara de Lobos",                       lat: 32.64600, lng: -16.97650, type: 'meal',  desc: "Poisson frais grillé au gros sel face au port de Câmara de Lobos. Référence Michelin Guide. Rua Dr João Abel de Freitas 30A." },
+  'vila-carne':            { name: "Vila da Carne",               q: "Vila da Carne restaurante Câmara de Lobos",                       lat: 32.64600, lng: -16.97650, type: 'meal',  desc: "Sœur jumelle de Vila do Peixe, juste à côté. Espetada de référence à Câmara de Lobos. Rua Dr João Abel de Freitas 30." },
+  'cascata-anjos':         { name: "Cascata dos Anjos",           q: "Cascata dos Anjos Ponta do Sol Madeira",                          lat: 32.68290, lng: -17.10960, type: 'sight', desc: "Cascade qui tombe sur la chaussée (ancienne ER101). On passe sous les embruns en voiture, fenêtres fermées." },
+  'seixal':                { name: "Praia do Seixal",             q: "Praia do Seixal Madeira",                                         lat: 32.82400, lng: -17.10932, type: 'sight', desc: "Plage de sable noir volcanique sur la côte nord. Cadre spectaculaire entre falaises." },
+  'fanal':                 { name: "Forêt de Fanal",              q: "Posto Florestal do Fanal Madeira",                                lat: 32.80951, lng: -17.14098, type: 'sight', desc: "Posto Florestal do Fanal. Forêt de lauriers (Laurissilva) brumeuse, irréelle quand la brume descend. Patrimoine Unesco." },
+  'porto-moniz':           { name: "Piscines de Porto Moniz",     q: "Piscinas Naturais de Porto Moniz",                                lat: 32.86700, lng: -17.17400, type: 'sight', desc: "Piscines naturelles aménagées dans la lave. Vestiaires, douches, accès facile." },
+  'cachalote':             { name: "Restaurante Cachalote",       q: "Restaurante Cachalote Porto Moniz",                               lat: 32.86680, lng: -17.17440, type: 'meal',  desc: "Poisson grillé en terrasse, posé sur la roche volcanique face aux piscines. Maison de 1969. Forte de São João Batista." },
+  'cabo-girao':            { name: "Cabo Girão Skywalk",          q: "Miradouro do Cabo Girão Skywalk",                                 lat: 32.65652, lng: -17.00444, type: 'sight', desc: "Plateforme de verre suspendue à 580 m, l'une des plus hautes falaises maritimes d'Europe." },
+  'pico-areeiro':          { name: "Pico do Areeiro",             q: "Pico do Arieiro Madeira",                                         lat: 32.73477, lng: -16.92871, type: 'sight', desc: "3e sommet de l'île (1818 m), accessible en voiture. Vue à 360° sur le centre montagneux." },
+  'pico-areeiro-parking':  { name: "Parking Pico do Areeiro",     q: "Pico do Arieiro parking",                                         lat: 32.73477, lng: -16.92871, type: 'sight', desc: "Parking du sommet (payant). Point de départ du sentier PR1 vers Pico Ruivo / Stairway to Heaven." },
+  'ribeiro-frio':          { name: "Ribeiro Frio",                q: "Ribeiro Frio Posto Aquícola Madeira",                             lat: 32.73600, lng: -16.88550, type: 'meal',  desc: "Posto Aquícola : truites élevées sur place, cuisine simple en pleine forêt de lauriers. Sur la route ER103." },
+  'santana':               { name: "Casas de Santana",            q: "Casas Típicas de Santana Madeira",                                lat: 32.80526, lng: -16.88241, type: 'sight', desc: "Maisons triangulaires colorées au toit de chaume, emblèmes du nord de l'île. Trois sont conservées au Parque Temático." },
+  'cantinho-serra':        { name: "Cantinho da Serra (Santana)", q: "Cantinho da Serra restaurante Santana Pico das Pedras",           lat: 32.78950, lng: -16.88950, type: 'meal',  desc: "Cuisine madérienne au feu de bois, Estrada do Pico das Pedras 57, Santana — à combiner avec la visite des Casas. ⚠️ N'EST PAS à Calheta." },
+  'sao-lourenco':          { name: "Ponta de São Lourenço",       q: "Vereda da Ponta de São Lourenço PR8 parking",                     lat: 32.74322, lng: -16.70094, type: 'sight', desc: "Pointe est de l'île. Parking PR8, panorama lunaire de roches rouges et noires." },
+  'rabacal':               { name: "Parking Rabaçal",             q: "Rabaçal Levada das 25 Fontes parking",                            lat: 32.75472, lng: -17.13375, type: 'sight', desc: "Altitude 1291 m. Point de départ des Levadas das 25 Fontes (PR6) et do Risco. Sentiers plats le long des canaux." },
+  'ponta-sol':             { name: "Ponta do Sol",                q: "Ponta do Sol Madeira",                                            lat: 32.67740, lng: -17.10000, type: 'sight', desc: "Village dans le creux d'une falaise, le plus ensoleillé de l'île." },
+  'camara-lobos':          { name: "Câmara de Lobos",             q: "Câmara de Lobos porto",                                           lat: 32.64600, lng: -16.97700, type: 'sight', desc: "Port de pêche peint par Churchill. Un dernier expresso face aux barques colorées." },
 
-  // Festa da Flor 2026 — venues vérifiés (Wikipédia, Visit Madeira, Largo da Restauração wikidata)
-  'avenida-mar':           { name: "Avenida do Mar (Cortejo)",     lat: 32.64475, lng: -16.90889, type: 'event', desc: "Avenida do Mar e das Comunidades Madeirenses, Funchal. Le grand cortège fleuri y défile dimanche 17 mai à 16h30. Stationnement saturé — venir en bus / taxi / à pied depuis le marché." },
-  'avenida-arriaga':       { name: "Avenida Arriaga (Mercado da Flor)", lat: 32.64750, lng: -16.91075, type: 'event', desc: "Avenue commerciale piétonne au centre de Funchal. Mercado da Flor + tapis floraux entre la Loja do Cidadão et le Largo do Corpo Santo. Marché 10h–minuit (sam jusqu'à 1h)." },
-  'pavilhao-flor':         { name: "Pavilhão da Flor",             lat: 32.64739, lng: -16.90969, type: 'event', desc: "Largo da Restauração, à l'extrémité est de l'Avenida Arriaga (face au fort São Lourenço). 71e Exposição da Flor, ouverte tous les jours du séjour. Entrée libre, ~30 min." },
-  'praca-povo':            { name: "Praça do Povo (Classic Cars)", lat: 32.64411, lng: -16.90889, type: 'event', desc: "Place inaugurée en 2014, sur le front de mer face à la marina de Funchal. Madeira Classic Car Revival du 22 au 24 mai. Concours costume vintage samedi 14h–15h." },
-  'canico':                { name: "Caniço (Festa da Cebola)",     lat: 32.64850, lng: -16.84290, type: 'event', desc: "Village de Caniço, municipalité de Santa Cruz, ~50 min de Funchal. Festa da Cebola du 22 au 24 mai : cortège de tracteurs, enchère d'oignons, musique et stands." },
+  // Festa da Flor 2026 — venues vérifiés
+  'avenida-mar':           { name: "Avenida do Mar (Cortejo)",     q: "Avenida do Mar Funchal",                                          lat: 32.64530, lng: -16.90820, type: 'event', desc: "Avenida do Mar e das Comunidades Madeirenses, Funchal. Le grand cortège fleuri y défile dimanche 17 mai à 16h30." },
+  'avenida-arriaga':       { name: "Avenida Arriaga (Mercado da Flor)", q: "Avenida Arriaga Funchal",                                    lat: 32.64720, lng: -16.91100, type: 'event', desc: "Avenue commerciale piétonne au centre de Funchal. Mercado da Flor + tapis floraux entre la Loja do Cidadão et le Largo do Corpo Santo. Marché 10h–minuit (sam jusqu'à 1h)." },
+  'pavilhao-flor':         { name: "Pavilhão da Flor",             q: "Largo da Restauração Funchal",                                    lat: 32.64739, lng: -16.90969, type: 'event', desc: "Largo da Restauração, à l'extrémité est de l'Avenida Arriaga (face au fort São Lourenço). 71e Exposição da Flor, ouverte tous les jours du séjour. Entrée libre, ~30 min." },
+  'praca-povo':            { name: "Praça do Povo (Classic Cars)", q: "Praça do Povo Funchal",                                           lat: 32.64480, lng: -16.90600, type: 'event', desc: "Place inaugurée en 2014, sur le front de mer face à la marina de Funchal. Madeira Classic Car Revival du 22 au 24 mai. Concours costume vintage samedi 14h–15h." },
+  'canico':                { name: "Caniço (Festa da Cebola)",     q: "Caniço Santa Cruz Madeira",                                       lat: 32.64850, lng: -16.84290, type: 'event', desc: "Village de Caniço, municipalité de Santa Cruz, ~50 min de Funchal. Festa da Cebola du 22 au 24 mai : cortège de tracteurs, enchère d'oignons, musique et stands." },
 
   // Restaurants vérifiés — TripAdvisor / Michelin Guide / TheFork (mai 2026)
-  'akua':              { name: "Ákua by Chef Júlio Pereira",  lat: 32.64780, lng: -16.90820, type: 'meal', desc: "★ Michelin Guide. Cuisine madérienne contemporaine, accent fruits de mer. Rua dos Murças 6, Funchal centre. TripAdvisor 4.5/5, Google 4.7. €€€ — réservation impérative pour 5." },
-  'kampo':             { name: "Kampo by Chef Júlio Pereira", lat: 32.64810, lng: -16.90700, type: 'meal', desc: "★ Michelin Guide. Sœur d'Ákua, plus orientée viande (queue de bœuf, T-bone, surf-and-turf). Rua da Alfândega 74, Funchal. TripAdvisor 4.5+, Google 4.7. €€-€€€." },
-  'razao':             { name: "RAZÃO por Octávio Freitas",   lat: 32.72200, lng: -17.18100, type: 'meal', desc: "Chef ex-Il Gallo d'Oro (2 ⭐). Cuisine d'auteur, produit régional. À l'hôtel Socalco Nature Calheta, à 5 min de la base. €€€. Réservation impérative." },
-  'onda-azul':         { name: "Onda Azul (Calheta Beach)",   lat: 32.71970, lng: -17.17280, type: 'meal', desc: "Restaurant du Calheta Beach Hotel, en bord de plage. Madère + international. TheFork 8.5/10. €€. Bonne option sans réserver très en avance." },
-  'old-pharmacy':      { name: "The Old Pharmacy",            lat: 32.67960, lng: -17.10060, type: 'meal', desc: "Tapas, petiscos, brunch, bar à vins, ambiance lounge. Centre du village face à l'église. TripAdvisor 4.3/5 (618 avis), Google 4.5. €€." },
-  'orca-porto-moniz':  { name: "Restaurante Orca",            lat: 32.86820, lng: -17.17470, type: 'meal', desc: "Plan B si Cachalote complet — juste à côté, même rotunda des piscines. Poisson madérien, même vue. €€." },
-  'avenida-gastropub': { name: "Avenida GastroPub & Grill",   lat: 32.67310, lng: -17.06170, type: 'meal', desc: "Sur l'avenue front de mer de Ribeira Brava. Burgers, viandes grillées, poissons. TripAdvisor 4.3/5. €€. Pratique sur la route Calheta ↔ Funchal." },
-  'o-recante':         { name: "Restaurante O Recante",       lat: 32.74150, lng: -16.73400, type: 'meal', desc: "★ Top de l'est (TripAdvisor 4.8/5, ~185 avis). Pêche du jour, poulpe tendre, gambas à l'ail. Estrada de São Lourenço 67, Caniçal — sur la route du PR8. €€. Réservation conseillée." },
-  'mercado-velho':     { name: "Restaurante Mercado Velho",   lat: 32.71790, lng: -16.76410, type: 'meal', desc: "Dans un bâtiment XVIIe restauré, sous les platanes (Alameda dos Plátanos), Machico. Poisson madérien traditionnel. €€." }
+  'akua':              { name: "Ákua by Chef Júlio Pereira",  q: "Akua restaurante Funchal Rua dos Murças",          lat: 32.64770, lng: -16.90840, type: 'meal', desc: "★ Michelin Guide. Cuisine madérienne contemporaine, accent fruits de mer. Rua dos Murças 6, Funchal centre. TripAdvisor 4.5/5, Google 4.7. €€€ — réservation impérative pour 5." },
+  'kampo':             { name: "Kampo by Chef Júlio Pereira", q: "Kampo restaurante Funchal Rua da Alfândega",       lat: 32.64790, lng: -16.90770, type: 'meal', desc: "★ Michelin Guide. Sœur d'Ákua, plus orientée viande (queue de bœuf, T-bone, surf-and-turf). Rua da Alfândega 74, Funchal. TripAdvisor 4.5+, Google 4.7. €€-€€€." },
+  'razao':             { name: "RAZÃO por Octávio Freitas",   q: "Razão Octávio Freitas Socalco Nature Calheta",     lat: 32.72510, lng: -17.18100, type: 'meal', desc: "Chef ex-Il Gallo d'Oro (2 ⭐). Cuisine d'auteur, produit régional. À l'hôtel Socalco Nature Calheta, à 5 min de la base. €€€. Réservation impérative." },
+  'onda-azul':         { name: "Onda Azul (Calheta Beach)",   q: "Onda Azul Calheta Beach Hotel",                    lat: 32.71970, lng: -17.17280, type: 'meal', desc: "Restaurant du Calheta Beach Hotel, en bord de plage. Madère + international. TheFork 8.5/10. €€. Bonne option sans réserver très en avance." },
+  'old-pharmacy':      { name: "The Old Pharmacy",            q: "The Old Pharmacy Ponta do Sol",                    lat: 32.68040, lng: -17.10000, type: 'meal', desc: "Tapas, petiscos, brunch, bar à vins, ambiance lounge. Centre du village face à l'église. TripAdvisor 4.3/5 (618 avis), Google 4.5. €€." },
+  'orca-porto-moniz':  { name: "Restaurante Orca",            q: "Restaurante Orca Porto Moniz",                     lat: 32.86670, lng: -17.17460, type: 'meal', desc: "Plan B si Cachalote complet — juste à côté, même rotunda des piscines. Poisson madérien, même vue. €€." },
+  'avenida-gastropub': { name: "Avenida GastroPub & Grill",   q: "Avenida GastroPub Grill Ribeira Brava",            lat: 32.67310, lng: -17.06170, type: 'meal', desc: "Sur l'avenue front de mer de Ribeira Brava. Burgers, viandes grillées, poissons. TripAdvisor 4.3/5. €€. Pratique sur la route Calheta ↔ Funchal." },
+  'o-recante':         { name: "Restaurante O Recante",       q: "Restaurante O Recante Caniçal",                    lat: 32.74050, lng: -16.74100, type: 'meal', desc: "★ Top de l'est (TripAdvisor 4.8/5, ~185 avis). Pêche du jour, poulpe tendre, gambas à l'ail. Estrada de São Lourenço 67, Caniçal — sur la route du PR8. €€. Réservation conseillée." },
+  'mercado-velho':     { name: "Restaurante Mercado Velho",   q: "Restaurante Mercado Velho Machico",                lat: 32.71790, lng: -16.76410, type: 'meal', desc: "Dans un bâtiment XVIIe restauré, sous les platanes (Alameda dos Plátanos), Machico. Poisson madérien traditionnel. €€." },
+
+  // Parking — utile pour le Cortejo de la Festa da Flor
+  'parking-almirante': { name: "Parking Almirante Reis (Cortejo)", q: "Parque de Estacionamento Almirante Reis Funchal", lat: 32.64830, lng: -16.90230, type: 'sight', desc: "Le grand parking souterrain du centre Funchal, ouvert le dimanche (~€1.40/h, ~€10/jour). 8–10 min à pied de l'Avenida do Mar. ⚠️ Accès uniquement via Rua D. Carlos I (côté est) — le tunnel Sá Carneiro est fermé pendant le Cortejo. Arriver avant 14h." }
 };
 
 const DAYS = [
@@ -351,9 +356,10 @@ function setupTabs() {
       const tab = btn.dataset.tab;
       $$('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
       $$('.pane').forEach(p => p.classList.toggle('active', p.id === `pane-${tab}`));
-      if (tab === 'map') {
-        // Leaflet needs a size recalculation when shown
-        setTimeout(() => map && map.invalidateSize(), 60);
+      if (tab === 'map' && map) {
+        // Multi-call invalidate covers the CSS transition + first paint —
+        // fixes the "map only renders 1/3 of the time" issue.
+        [40, 200, 600].forEach(d => setTimeout(() => map.invalidateSize(), d));
       }
     });
   });
@@ -369,19 +375,24 @@ function openPlaceModal(placeId) {
   $('#btnApple').style.display = 'flex';
   $('#btnShare').style.display = 'flex';
   $('#btnGmaps').style.display = 'flex';
-  $('#btnGmaps').innerHTML = '<span class="btn-icon">🗺️</span><span>Ouvrir dans Google Maps</span>';
+  $('#btnGmaps').innerHTML = '<span class="btn-icon">🗺️</span><span>Itinéraire · Google Maps</span>';
+  $('#btnApple').innerHTML = '<span class="btn-icon">🍎</span><span>Itinéraire · Plans (Apple)</span>';
+  $('#btnWaze').innerHTML  = '<span class="btn-icon">🚗</span><span>Itinéraire · Waze</span>';
+  $('#btnShare').innerHTML = '<span class="btn-icon">↗︎</span><span>Partager le lieu</span>';
   const ipmaBtn = $('#btnIpma'); if (ipmaBtn) ipmaBtn.remove();
   const kicker = p.type === 'meal' ? 'Restaurant' : p.type === 'event' ? 'Événement' : 'Destination';
   $('#modalKicker').textContent = kicker;
   $('#modalTitle').textContent = p.name;
   $('#modalDesc').textContent = p.desc || '';
   $('#modalCoords').textContent = '';
-  // Use ?q=LAT,LNG for Google Maps — drops a pin at exact coords (no fuzzy search-by-coord)
-  // Use navigate=no for Waze — opens destination as pin, user decides to route (avoids
-  // "could not find a route" when user is far from destination, e.g. another country)
+  // Build Maps URLs using the canonical place name (q). Google/Apple geocode the
+  // business directly — far more reliable than raw lat,lng (which can land 50m
+  // off, sometimes in the sea for coastal restaurants).
+  // Waze stays coords-based since it has no place-name lookup.
+  const query = p.q ? encodeURIComponent(p.q) : `${p.lat},${p.lng}`;
   $('#btnWaze').href  = `https://waze.com/ul?ll=${p.lat},${p.lng}&navigate=no&zoom=17`;
-  $('#btnGmaps').href = `https://www.google.com/maps?q=${p.lat},${p.lng}`;
-  $('#btnApple').href = `https://maps.apple.com/?q=${p.lat},${p.lng}`;
+  $('#btnGmaps').href = `https://www.google.com/maps?q=${query}`;
+  $('#btnApple').href = `https://maps.apple.com/?q=${query}`;
   $('#btnShare').onclick = async () => {
     const text = `${p.name} — https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
     if (navigator.share) {
@@ -439,6 +450,19 @@ function setupSettings() {
 
 // ---------- MAP -----------------------------------------------------
 
+// One distinctive colour per day for the route polylines
+const DAY_COLORS = {
+  1: '#c8553d', // terracotta
+  2: '#d4a574', // gold
+  3: '#1a4d5c', // ocean
+  4: '#5a6f4a', // moss
+  5: '#8b5a8c', // plum
+  6: '#3a6a8a', // slate blue
+  7: '#0d2e38'  // ocean deep
+};
+
+let mapPolylines = [];
+
 function setupMap() {
   // Basic Leaflet map centred on Madeira
   map = L.map('leaflet-map', {
@@ -452,18 +476,18 @@ function setupMap() {
     attribution: '&copy; OpenStreetMap'
   }).addTo(map);
 
-  // Build place → days mapping for filter labels
+  // Build place → days mapping
   const placeDays = {};
   DAYS.forEach(day => day.items.forEach(it => it.places.forEach(pid => {
     placeDays[pid] = placeDays[pid] || new Set();
     placeDays[pid].add(day.id);
   })));
 
-  // Add markers
+  // Add markers (only for places referenced in any day)
   Object.entries(PLACES).forEach(([pid, p]) => {
     const days = [...(placeDays[pid] || [])].sort();
-    if (days.length === 0) return; // skip places never referenced
-    const cls = p.type === 'meal' ? 'leaflet-pin meal' : 'leaflet-pin';
+    if (days.length === 0) return;
+    const cls = p.type === 'meal' ? 'leaflet-pin meal' : p.type === 'event' ? 'leaflet-pin event' : 'leaflet-pin';
     const label = days.map(d => DAYS[d-1].dow.charAt(0)).join('');
     const icon = L.divIcon({
       html: `<div class="${cls}"><span>${label}</span></div>`,
@@ -480,10 +504,29 @@ function setupMap() {
     mapMarkers.push(m);
   });
 
-  // Build the list below
+  // Build per-day route polylines (drawn but hidden by default; filter toggles them)
+  DAYS.forEach(day => {
+    const pts = [];
+    day.items.forEach(it => it.places.forEach(pid => {
+      const p = PLACES[pid];
+      if (p) pts.push([p.lat, p.lng]);
+    }));
+    if (pts.length < 2) return;
+    const line = L.polyline(pts, {
+      color: DAY_COLORS[day.id],
+      weight: 3,
+      opacity: 0.75,
+      dashArray: '6 6',
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
+    line._dayId = day.id;
+    mapPolylines.push(line);
+  });
+
   renderMapList();
 
-  // Filter buttons
+  // Filter buttons (days only)
   $$('.filter-pill').forEach(btn => {
     btn.addEventListener('click', () => {
       $$('.filter-pill').forEach(b => b.classList.toggle('active', b === btn));
@@ -491,15 +534,28 @@ function setupMap() {
       applyMapFilter();
     });
   });
+
+  // Draw all routes on initial "all" filter
+  applyMapFilter();
+
+  // ResizeObserver fixes the "map only renders 1 in 3 times" bug — when the
+  // pane goes from hidden → visible, Leaflet doesn't know its new size until
+  // we tell it. Calling invalidateSize on every resize covers that, plus
+  // orientation changes and PWA install events.
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => {
+      if (map) map.invalidateSize();
+    });
+    ro.observe(document.getElementById('leaflet-map'));
+  }
 }
 
 function applyMapFilter() {
   let visiblePoints = [];
+  // Markers
   mapMarkers.forEach(m => {
     let show = true;
-    if (activeFilter === 'meal') show = m._type === 'meal';
-    else if (activeFilter === 'sight') show = m._type === 'sight';
-    else if (activeFilter.startsWith('d')) {
+    if (activeFilter.startsWith('d')) {
       const dayNum = parseInt(activeFilter.slice(1), 10);
       show = m._days.includes(dayNum);
     }
@@ -509,6 +565,15 @@ function applyMapFilter() {
     } else {
       map.removeLayer(m);
     }
+  });
+  // Polylines — show one specific day, or all days if "all"
+  mapPolylines.forEach(line => {
+    let show = true;
+    if (activeFilter.startsWith('d')) {
+      show = line._dayId === parseInt(activeFilter.slice(1), 10);
+    }
+    if (show) line.addTo(map);
+    else map.removeLayer(line);
   });
   if (visiblePoints.length > 0) {
     const bounds = L.latLngBounds(visiblePoints);

@@ -5,7 +5,7 @@
 //   - OSM tiles & weather API: stale-while-revalidate
 //   - Everything else: network with cache fallback
 
-const VERSION = 'mad26-v3';
+const VERSION = 'mad26-v4';
 const APP_CACHE = `${VERSION}-app`;
 const RUNTIME = `${VERSION}-runtime`;
 
