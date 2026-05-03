@@ -241,11 +241,16 @@ function saveDoneSet(set) {
 }
 
 function toast(msg, ms = 1800) {
+  if (!msg) return; // never show an empty pill
   const t = $('#toast');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => t.classList.remove('show'), ms);
+  toast._t = setTimeout(() => {
+    t.classList.remove('show');
+    // Clear text after the slide-out so it's never an empty pill mid-animation
+    setTimeout(() => { if (!t.classList.contains('show')) t.textContent = ''; }, 400);
+  }, ms);
 }
 
 // ---------- RENDER: DAY PAGES --------------------------------------
@@ -799,7 +804,7 @@ function setupInstall() {
 
 // ---------- SERVICE WORKER ------------------------------------------
 
-const APP_VERSION = 'mad26-v8';
+const APP_VERSION = 'mad26-v9';
 
 // If the URL contains ?refresh=1 (or ?refresh=anything), wipe caches and reload
 // without the param. Acts as a one-tap "kick the stale Safari cache" link the
@@ -910,9 +915,77 @@ function setupChipDelegation() {
   });
 }
 
+// Festa da Flor 2026 — events overlapping the trip (17-23 May)
+const FESTA_EVENTS = [
+  {
+    when: "Dim 17 mai · 16h30 · ★ JOUR D'ARRIVÉE",
+    title: "Grande Cortejo Alegórico",
+    body: "Le grand cortège fleuri, ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. <strong>Coup de chance</strong> : il tombe le jour de l'arrivée — détour possible avant Calheta.",
+    park: "<strong>Parque Almirante Reis</strong> (~€10/jour, ouvert dim). 8–10 min à pied de l'Avenida do Mar. <strong>Accès uniquement par Rua D. Carlos I</strong> — le tunnel Sá Carneiro est fermé pendant le cortège. Arriver avant 14h.",
+    chips: ['avenida-mar', 'parking-almirante']
+  },
+  {
+    when: "Lun 18 → Ven 22 · toute la journée",
+    title: "Tapis floraux + Marché + Expo",
+    body: "18 tapis floraux entre Loja do Cidadão et Largo do Corpo Santo, Mercado da Flor (10h–minuit) sur l'Avenida Arriaga, et Exposição da Flor au Pavilhão da Flor. Tout en centre Funchal, gratuit.",
+    chips: ['avenida-arriaga', 'pavilhao-flor']
+  },
+  {
+    when: "Jeu 21 · 21h00",
+    title: "Orquestra Clássica + Ensemble XXI",
+    body: "Concert symphonique à Funchal. Salle à confirmer sur cultura.madeira.gov.pt.",
+    chips: []
+  },
+  {
+    when: "Ven 22 → Dim 24",
+    title: "Madeira Classic Car Revival",
+    body: "Exposition de voitures anciennes. <strong>Sam 23 · 14h–15h</strong> : « Vestir à Época » (concours costume vintage). Gratuit.",
+    chips: ['praca-povo']
+  },
+  {
+    when: "Ven 22 → Dim 24 · Caniço",
+    title: "Festa da Cebola",
+    body: "Fête authentique de l'oignon (~50 min de Funchal). Cortège de tracteurs, enchère d'oignons, musique trad', stands de bouffe. Plus local et moins touristique.",
+    chips: ['canico']
+  },
+  {
+    when: "Lun 18 → Sam 23 · Trans Madeira",
+    title: "Course VTT enduro 6 jours",
+    body: "L'enduro VTT traverse l'île de Machico (est) à Calheta (ouest). Dernière étape <strong>samedi 23 à Calheta</strong> — pile sur la base. Spectateurs bienvenus.",
+    chips: ['marina-calheta']
+  }
+];
+
+function renderFestaFlor() {
+  const host = $('#florEvents');
+  if (!host) return;
+  host.innerHTML = FESTA_EVENTS.map(ev => {
+    const chipsHtml = ev.chips.length
+      ? `<div class="chips">${ev.chips.map(pid => {
+          const p = PLACES[pid];
+          if (!p) return '';
+          const cls = p.type === 'meal' ? 'loc-chip meal' : p.type === 'event' ? 'loc-chip event' : 'loc-chip';
+          return `<a class="${cls}" data-place="${pid}">${escapeHtml(p.name)}</a>`;
+        }).join('')}</div>`
+      : '';
+    const parkHtml = ev.park
+      ? `<div class="park"><div class="park-label">🅿️ Bon plan parking</div>${ev.park}</div>`
+      : '';
+    return `
+      <div class="flor-event">
+        <div class="when">${escapeHtml(ev.when)}</div>
+        <div class="title">${escapeHtml(ev.title)}</div>
+        <div class="body">${ev.body}</div>
+        ${parkHtml}
+        ${chipsHtml}
+      </div>`;
+  }).join('');
+}
+
 function boot() {
   renderDays();
   renderRestaurants();
+  renderFestaFlor();
   setupTabs();
   setupModals();
   setupSettings();
