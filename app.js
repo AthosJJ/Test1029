@@ -446,6 +446,13 @@ function setupSettings() {
     renderDays();
     toast('Cases réinitialisées');
   });
+  const fu = $('#forceUpdate');
+  if (fu) fu.addEventListener('click', () => {
+    toast('Effacement du cache…', 1500);
+    setTimeout(forceAppUpdate, 200);
+  });
+  const ver = $('#appVersion');
+  if (ver) ver.textContent = `Version ${APP_VERSION}`;
 }
 
 // ---------- MAP -----------------------------------------------------
@@ -792,24 +799,26 @@ function setupInstall() {
 
 // ---------- SERVICE WORKER ------------------------------------------
 
+const APP_VERSION = 'mad26-v5';
+
 function setupSW() {
   if (!('serviceWorker' in navigator)) return;
   window.addEventListener('load', async () => {
     try {
-      const reg = await navigator.serviceWorker.register('sw.js');
-      // Detect a new SW waiting and offer to refresh
+      // updateViaCache:'none' → the SW script itself is never cached, so the
+      // browser always fetches the freshest sw.js. Without this, iOS PWA can
+      // hold onto an old SW for hours/days.
+      const reg = await navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' });
       reg.addEventListener('updatefound', () => {
         const sw = reg.installing;
         if (!sw) return;
         sw.addEventListener('statechange', () => {
           if (sw.state === 'installed' && navigator.serviceWorker.controller) {
-            // New version installed — auto-activate next time and notify
-            toast('Nouvelle version dispo · recharger pour mettre à jour', 4000);
+            toast('Nouvelle version dispo · rechargement…', 2200);
             sw.postMessage({ type: 'SKIP_WAITING' });
           }
         });
       });
-      // When SW takes control, reload once so the user sees fresh code
       let reloaded = false;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (reloaded) return;
@@ -818,8 +827,29 @@ function setupSW() {
       });
       // Periodic check (every 30 min while app is open)
       setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+      // Check once on first load too
+      reg.update().catch(() => {});
     } catch {}
   });
+}
+
+// Nuclear option: unregister all SWs, drop all caches, and reload.
+// Wired to a button in Settings so users stuck on a stale cache can recover.
+async function forceAppUpdate() {
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } catch {}
+  // Cache-busted reload
+  const u = new URL(window.location.href);
+  u.searchParams.set('v', Date.now());
+  window.location.replace(u.toString());
 }
 
 // ---------- SWIPE NAV BUTTONS --------------------------------------
