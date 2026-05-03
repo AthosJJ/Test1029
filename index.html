@@ -193,7 +193,7 @@
     scroll-snap-align: start;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 4px 18px 100px;
+    padding: 4px 18px calc(140px + var(--safe-bottom));
     overscroll-behavior: contain;
   }
   .day-page::-webkit-scrollbar { width: 0; }
@@ -592,10 +592,10 @@
   .leaflet-pin.event { background: var(--moss); }
 
   /* === EATS PANE === */
-  .pane-eats { padding: 14px 18px calc(100px + var(--safe-bottom)); }
+  .pane-eats { padding: 14px 18px calc(140px + var(--safe-bottom)); }
 
   /* === TIPS PANE === */
-  .pane-tips { padding: 14px 18px calc(100px + var(--safe-bottom)); }
+  .pane-tips { padding: 14px 18px calc(140px + var(--safe-bottom)); }
 
   .section-head {
     text-align: center;
@@ -773,10 +773,8 @@
     flex-shrink: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    background: rgba(250,246,236,0.96);
-    backdrop-filter: saturate(180%) blur(14px);
-    -webkit-backdrop-filter: saturate(180%) blur(14px);
-    border-top: 1px solid rgba(0,0,0,0.08);
+    background: var(--paper);
+    border-top: 1px solid rgba(0,0,0,0.1);
     padding: 6px 4px calc(6px + var(--safe-bottom));
     z-index: 50;
   }
@@ -1310,6 +1308,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=7"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

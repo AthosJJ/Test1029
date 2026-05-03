@@ -66,7 +66,7 @@ const DAYS = [
     subtitle: "Funchal Airport → cortège fleuri → Calheta",
     items: [
       { time: "14:00", title: "Récupération de la voiture", body: "Sortie aéroport, choix : direct Calheta (50 min) — OU détour Funchal pour le cortège (voir Bonus).", places: ['aeroport'] },
-      { time: "16:30", title: "★ Cortejo Alegórico (Festa da Flor)", body: "Le grand cortège fleuri, Avenida do Mar à Funchal. Coup de chance : il tombe le jour de l'arrivée. ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. Si fatigue : zapper et filer à Calheta.", places: [] },
+      { time: "16:30", title: "★ Cortejo Alegórico (Festa da Flor)", body: "Le grand cortège fleuri, Avenida do Mar à Funchal. Coup de chance : il tombe le jour de l'arrivée. ~1500 figurants, chars en fleurs. Visible gratuitement le long de l'avenue. Si fatigue : zapper et filer à Calheta. 🅿️ Parking : Parque Almirante Reis (accès Rua D. Carlos I — le tunnel Sá Carneiro est fermé). Arriver avant 14h.", places: ['avenida-mar', 'parking-almirante'] },
       { time: "18:30", title: "Cap à l'ouest", body: "VR1 puis VE3 — 50 min de routes côtières jusqu'à Estreito da Calheta.", places: ['estreito'] },
       { time: "19:30", title: "Check-in & piscine", body: "Les jambes posées, le voyage commence vraiment.", places: [] },
       { time: "21:00", title: "Dîner — Razão (option ★)", body: "À 5 min de l'hôtel : RAZÃO par Octávio Freitas (ex-Il Gallo d'Oro, 2 étoiles Michelin) au Socalco Nature. Réservation impérative pour 5. Sinon : Onda Azul à la marina.", places: ['razao', 'onda-azul'] }
@@ -799,7 +799,7 @@ function setupInstall() {
 
 // ---------- SERVICE WORKER ------------------------------------------
 
-const APP_VERSION = 'mad26-v7';
+const APP_VERSION = 'mad26-v8';
 
 // If the URL contains ?refresh=1 (or ?refresh=anything), wipe caches and reload
 // without the param. Acts as a one-tap "kick the stale Safari cache" link the
