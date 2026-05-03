@@ -117,13 +117,19 @@
     pointer-events: none;
     transform: translateY(8px);
     transition: opacity 0.22s ease, transform 0.22s ease;
-    display: flex;
-    flex-direction: column;
   }
   .pane.active {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+  }
+  /* Flex column only for the panes that need it (the days pager and the
+     map list). For pane-tips / pane-eats, normal block layout — otherwise
+     flex-shrink on card-block children clips them when total height
+     exceeds the viewport, leaving only the kicker visible. */
+  #pane-days, #pane-map {
+    display: flex;
+    flex-direction: column;
   }
   #pane-days { overflow-y: hidden; }
 
@@ -1367,6 +1373,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=11"></script>
+<script src="app.js?v=12"></script>
 </body>
 </html>

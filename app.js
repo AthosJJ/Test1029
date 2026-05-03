@@ -804,7 +804,7 @@ function setupInstall() {
 
 // ---------- SERVICE WORKER ------------------------------------------
 
-const APP_VERSION = 'mad26-v11';
+const APP_VERSION = 'mad26-v12';
 
 // If the URL contains ?refresh=1 (or ?refresh=anything), wipe caches and reload
 // without the param. Acts as a one-tap "kick the stale Safari cache" link the
