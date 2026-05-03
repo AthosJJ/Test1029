@@ -892,7 +892,7 @@
     grid-template-columns: repeat(4, 1fr);
     background: var(--paper);
     border-top: 1px solid rgba(0,0,0,0.1);
-    padding: 6px 4px calc(6px + var(--safe-bottom));
+    padding: 4px 4px max(4px, var(--safe-bottom));
     z-index: 50;
   }
   .tab-btn {
@@ -903,7 +903,7 @@
     gap: 2px;
     background: none;
     border: none;
-    padding: 8px 4px;
+    padding: 6px 4px 2px;
     cursor: pointer;
     color: var(--whisper);
     transition: color 0.15s ease;
@@ -1373,6 +1373,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=12"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>
