@@ -723,6 +723,37 @@
     margin-bottom: 2px;
   }
 
+  /* === LOGISTIQUE TIP CARDS === */
+  .tip-row {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px dotted rgba(255,255,255,0.18);
+    align-items: start;
+  }
+  .tip-row:last-child { border-bottom: none; }
+  .tip-row .tip-n {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 500;
+    padding-top: 3px;
+  }
+  .tip-row .tip-text {
+    color: var(--sand);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .tip-row .tip-text strong {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: white;
+    display: block;
+    margin-bottom: 2px;
+  }
+
   .pico-block {
     background: linear-gradient(135deg, #fff 0%, #fef8e8 100%);
     border: 1px solid var(--gold);
@@ -1232,19 +1263,11 @@
         </div>
       </div>
 
-      <div class="card-block dark">
+      <div class="card-block dark" id="logistiqueCard">
         <div class="card-num">β</div>
         <div class="card-kicker">Logistique · réflexes</div>
         <h3>Les bons réflexes</h3>
-        <ol class="tip-list">
-          <li><strong>Voiture automatique.</strong> Les routes en lacets sont longues, surtout pour la côte nord.</li>
-          <li><strong>Réserver le bateau dès lundi.</strong> Lobosonda et concurrents partent vite à plein.</li>
-          <li><strong>Calheta = avantage marina.</strong> Pas besoin de retourner à Funchal pour la mer.</li>
-          <li><strong>Une polaire dans le sac.</strong> Pico do Areeiro à 1818 m peut tomber à 8 °C même en été.</li>
-          <li><strong>1 h pour l'aéroport.</strong> Vents forts, parfois retards. Partir large samedi matin.</li>
-          <li><strong>Hôtels à viser.</strong> Saccharum Resort &amp; Spa, Hotel Calheta Beach, Quinta do Estreito.</li>
-          <li><strong>Hors-ligne.</strong> Cette appli fonctionne sans réseau — installe-la sur l'écran d'accueil.</li>
-        </ol>
+        <div id="logistiqueTips"></div>
       </div>
 
       <div style="text-align: center; padding: 24px 0; font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: var(--whisper);">
@@ -1344,6 +1367,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=10"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>

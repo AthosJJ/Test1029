@@ -804,7 +804,7 @@ function setupInstall() {
 
 // ---------- SERVICE WORKER ------------------------------------------
 
-const APP_VERSION = 'mad26-v10';
+const APP_VERSION = 'mad26-v11';
 
 // If the URL contains ?refresh=1 (or ?refresh=anything), wipe caches and reload
 // without the param. Acts as a one-tap "kick the stale Safari cache" link the
@@ -982,10 +982,33 @@ function renderFestaFlor() {
   }).join('');
 }
 
+// Logistique tips for the Bonus tab
+const LOGISTIQUE_TIPS = [
+  ["Voiture automatique.", "Les routes en lacets sont longues, surtout pour la côte nord."],
+  ["Réserver le bateau dès lundi.", "Lobosonda et concurrents partent vite à plein."],
+  ["Calheta = avantage marina.", "Pas besoin de retourner à Funchal pour la mer."],
+  ["Une polaire dans le sac.", "Pico do Areeiro à 1818 m peut tomber à 8 °C même en été."],
+  ["1 h pour l'aéroport.", "Vents forts, parfois retards. Partir large samedi matin."],
+  ["Hôtels à viser.", "Saccharum Resort & Spa, Hotel Calheta Beach, Quinta do Estreito."],
+  ["Hors-ligne.", "Cette appli fonctionne sans réseau — installe-la sur l'écran d'accueil."]
+];
+
+function renderLogistique() {
+  const host = $('#logistiqueTips');
+  if (!host) return;
+  host.innerHTML = LOGISTIQUE_TIPS.map(([title, body], i) => `
+    <div class="tip-row">
+      <div class="tip-n">${String(i + 1).padStart(2, '0')}</div>
+      <div class="tip-text"><strong>${escapeHtml(title)}</strong>${escapeHtml(body)}</div>
+    </div>
+  `).join('');
+}
+
 function boot() {
   renderDays();
   renderRestaurants();
   renderFestaFlor();
+  renderLogistique();
   setupTabs();
   setupModals();
   setupSettings();
